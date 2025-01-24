@@ -1,3 +1,5 @@
+//APENAS ALGUNS TESTES DE INTERFACE PARA O PROJETO E ENTIDADES NADA AQUI É DEFINITIVO
+
 // Enum for School Subjects
 enum SchoolSubject {
   Portuguese = "Portuguese",
