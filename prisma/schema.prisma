@@ -1,0 +1,102 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum SchoolSubject {
+  Portuguese
+  Mathematics
+  Science
+  History
+  Geography
+  PhysicalEducation
+  Arts
+  English
+  Biology
+  Chemistry
+  Physics
+  Sociology
+  Philosophy
+  Other
+}
+
+model User {
+  id                  String   @id @default(uuid())
+  name                String
+  email               String   @unique
+  password            String
+  role                String
+  contentPreferences  String? // Preferências de conteúdo (tags separadas por vírgula)
+  createdContents     Content[]
+  comments            Comment[]
+  votes               Vote[]
+  contentFeeds        ContentFeed[]
+}
+
+model Content {
+  id              String        @id @default(uuid())
+  title           String
+  description     String?
+  type            String
+  creationDate    DateTime      @default(now())
+  authorId        String
+  generatedContent String
+  status          String
+  upvotes         Int           @default(0)
+  downvotes       Int           @default(0)
+  tags            String?
+  visibility      String
+  subject         SchoolSubject // Usa o enum definido acima
+  subdisciplineId String?
+  author          User          @relation(fields: [authorId], references: [id])
+  comments        Comment[]
+  votes           Vote[]
+  contentCreationForms ContentCreationForm[]
+}
+
+model Subdiscipline {
+  id       String        @id @default(uuid())
+  name     String
+  subject  SchoolSubject // Usa o enum definido acima
+}
+
+model Comment {
+  id          String   @id @default(uuid())
+  contentId   String
+  userId      String
+  text        String
+  creationDate DateTime @default(now())
+  content     Content   @relation(fields: [contentId], references: [id])
+  user        User      @relation(fields: [userId], references: [id])
+}
+
+model Vote {
+  id        String   @id @default(uuid())
+  contentId String
+  userId    String
+  type      String
+  voteDate  DateTime @default(now())
+  content   Content  @relation(fields: [contentId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model ContentCreationForm {
+  id                   String   @id @default(uuid())
+  fields               String
+  generationParameters String
+  submissionDate       DateTime @default(now())
+  generatedContentId   String
+  content              Content  @relation(fields: [generatedContentId], references: [id])
+}
+
+model ContentFeed {
+  id              String   @id @default(uuid())
+  userId          String
+  visibleContents String
+  sortingCriteria String
+  user            User     @relation(fields: [userId], references: [id])
+}
