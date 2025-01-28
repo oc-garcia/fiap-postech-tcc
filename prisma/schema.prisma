@@ -8,20 +8,20 @@ generator client {
 }
 
 enum SchoolSubject {
-  Portuguese
-  Mathematics
-  Science
-  History
-  Geography
-  PhysicalEducation
-  Arts
-  English
-  Biology
-  Chemistry
-  Physics
-  Sociology
-  Philosophy
-  Other
+  Portugues
+  Matematica
+  Ciencias
+  Historia
+  Geografia
+  EducacaoFisica
+  Artes
+  Ingles
+  Biologia
+  Quimica
+  Fisica
+  Sociologia
+  Filosofia
+  Outros
 }
 
 model User {
