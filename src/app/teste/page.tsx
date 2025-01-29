@@ -1,6 +1,6 @@
 "use client";
 
-import TeachingContentForm from "@/components/TeachingContentForm/TeachingContentForm";
+import CreateContentForm from "@/components/CreateContentForm/CreateContentForm";
 import { Button, Drawer } from "@mui/material";
 import React, { useState } from "react";
 
@@ -15,7 +15,7 @@ const Teste = () => {
     <div>
       <Button onClick={toggleDrawer(true)}>Open drawer</Button>
       <Drawer open={open} onClose={toggleDrawer(false)}>
-        <TeachingContentForm />
+        <CreateContentForm />
       </Drawer>
     </div>
   );

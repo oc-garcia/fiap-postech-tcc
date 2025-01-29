@@ -12,17 +12,17 @@ import InputLabel from "@mui/material/InputLabel";
 import { toFormikValidationSchema } from "zod-formik-adapter";
 import { SchoolSubject } from "@prisma/client";
 import useGetSubdisciplines from "@/hooks/useGetSubdisciplines";
+import { generateContentFromForm } from "@/services/createContent";
 
-// Esquema de validação usando Zod
 const contentSchema = z.object({
   title: z.string().min(3, "O título deve ter pelo menos 3 caracteres"),
-  description: z.string().optional(),
+  description: z.string().min(200, "A descrição deve ter pelo menos 200 caracteres"),
   type: z.enum(["atividade", "prova", "apresentação", "outro"]),
   subject: z.nativeEnum(SchoolSubject),
-  tags: z.array(z.string()).optional(),
+  tags: z.array(z.string()).min(1, "Selecione pelo menos uma tag"),
 });
 
-const TeachingContentForm = () => {
+const CreateContentForm = () => {
   const [selectedSubject, setSelectedSubject] = useState("");
 
   const formik = useFormik({
@@ -34,13 +34,17 @@ const TeachingContentForm = () => {
       tags: [],
     },
     validationSchema: toFormikValidationSchema(contentSchema),
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       console.log("Valores do formulário", values);
-      // Lógica de envio do formulário (ex.: chamada à API)
+      try {
+        const generatedContent = await generateContentFromForm(values);
+        console.log("Conteúdo gerado:", generatedContent);
+      } catch (error) {
+        console.error(error);
+      }
     },
   });
 
-  // Convert enum to array of values
   const schoolSubjects = Object.values(SchoolSubject);
   const subdisciplineList = useGetSubdisciplines(selectedSubject);
 
@@ -131,7 +135,8 @@ const TeachingContentForm = () => {
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           error={formik.touched.tags && Boolean(formik.errors.tags)}
-          renderValue={(selected) => selected.join(", ")}>
+          renderValue={(selected) => selected.join(", ")}
+          disabled={!formik.values.subject}>
           {subdisciplineList.map((subdiscipline) => (
             <MenuItem key={subdiscipline} value={subdiscipline}>
               {subdiscipline}
@@ -147,4 +152,4 @@ const TeachingContentForm = () => {
   );
 };
 
-export default TeachingContentForm;
+export default CreateContentForm;
