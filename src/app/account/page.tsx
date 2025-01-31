@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { Box, Container, Typography, Paper, List, ListItem, ListItemText, Skeleton } from "@mui/material";
 import Hero from "@/components/Hero/Hero";
-import { User, Content, SchoolSubject } from "@prisma/client"; // Importa os tipos diretamente do Prisma
+import { User, Content } from "@prisma/client"; // Importa os tipos diretamente do Prisma
 
 type UserWithContents = User & {
   createdContents: Content[];
