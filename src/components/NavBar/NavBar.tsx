@@ -57,7 +57,8 @@ function NavBar() {
               letterSpacing: ".3rem",
               color: "inherit",
               textDecoration: "none",
-            }}>
+            }}
+          >
             EducaPro
           </Typography>
 
@@ -68,7 +69,8 @@ function NavBar() {
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
-              color="inherit">
+              color="inherit"
+            >
               <MenuIcon />
             </IconButton>
             <Menu
@@ -85,7 +87,8 @@ function NavBar() {
               }}
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
-              sx={{ display: { xs: "block", md: "none" } }}>
+              sx={{ display: { xs: "block", md: "none" } }}
+            >
               {pages.map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
                   <Typography sx={{ textAlign: "center" }}>{page}</Typography>
@@ -108,7 +111,8 @@ function NavBar() {
               letterSpacing: ".3rem",
               color: "inherit",
               textDecoration: "none",
-            }}>
+            }}
+          >
             EducaPro
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
@@ -128,8 +132,12 @@ function NavBar() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                }}>
-                <PersonIcon sx={{ color: theme.palette.secondary.main }} />
+                  "&:hover .MuiSvgIcon-root": {
+                    color: "white",
+                  },
+                }}
+              >
+                <PersonIcon sx={{ color: theme.palette.primary.main }} />
               </IconButton>
             </Tooltip>
             <Menu
@@ -146,7 +154,8 @@ function NavBar() {
                 horizontal: "right",
               }}
               open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}>
+              onClose={handleCloseUserMenu}
+            >
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
                   <Typography sx={{ textAlign: "center" }}>{setting}</Typography>

@@ -7,12 +7,15 @@ import Container from "@mui/material/Container";
 
 const Footer = () => {
   return (
-    <AppBar position="sticky" color="primary" sx={{ top: "auto", bottom: 0 }}>
+    <AppBar position="static" color="primary">
       <Container maxWidth="xl">
         <Toolbar>
-          <Box sx={{ flexGrow: 1, display: "flex", justifyContent: "center", alignItems: "center" }}>
+          <Box sx={{ flexGrow: 1, display: "flex", justifyContent: "center", alignItems: "center", flexWrap: "wrap" }}>
             <Typography textAlign="center" color="inherit">
-              © 2025 EducaPro. Todos os direitos reservados.
+              © 2025 EducaPro.
+            </Typography>
+            <Typography textAlign="center" color="inherit">
+              Todos os direitos reservados.
             </Typography>
           </Box>
         </Toolbar>
