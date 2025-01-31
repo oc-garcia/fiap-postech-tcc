@@ -12,11 +12,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
-
   const formData = req.body;
-
-  
-
   try {
     const completion = await openAi.beta.chat.completions.parse({
       model: "gpt-4o-2024-08-06",

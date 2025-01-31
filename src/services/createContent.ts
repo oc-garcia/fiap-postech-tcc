@@ -16,7 +16,21 @@ export const generateContentFromForm = async (formData: FormData) => {
       throw new Error("Falha ao gerar conteúdo com a OpenAI.");
     }
 
-    return response.data;
+    const generatedContent = response.data;
+
+    const saveResponse = await axios.post("/api/saveContent", {
+      ...formData,
+      generatedContent: generatedContent.generatedContent,
+      status: generatedContent.status,
+      authorId: "some-author-id",
+      visibility: "public",
+    });
+
+    if (saveResponse.status !== 200) {
+      throw new Error("Falha ao salvar conteúdo no banco de dados.");
+    }
+
+    return saveResponse.data;
   } catch (error) {
     console.error("Erro ao gerar conteúdo:", error);
     throw new Error("Falha ao gerar conteúdo com a OpenAI.");
