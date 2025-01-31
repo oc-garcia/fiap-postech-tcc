@@ -5,7 +5,7 @@ import React from "react";
 const Explore = () => {
   return (
     <Box>
-      <Hero title="Explore" subtitle="Lorem ipsum dolor sit amet" backgroundImage="/images/explore-hero-image.jpg" />
+      <Hero title="Explore" subtitle="Mergulhe em conteúdos educativos incríveis escolhidos pela comunidade" backgroundImage="/images/explore-hero-image.jpg" />
     </Box>
   );
 };

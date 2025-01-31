@@ -3,7 +3,7 @@ import { Box, Typography } from "@mui/material";
 
 interface HeroProps {
   title: string;
-  subtitle: string;
+  subtitle?: string;
   backgroundImage: string;
 }
 
@@ -41,9 +41,11 @@ const Hero: React.FC<HeroProps> = ({ title, subtitle, backgroundImage }) => {
         <Typography variant="h2" component="h1" gutterBottom sx={{ fontWeight: "bold" }}>
           {title}
         </Typography>
-        <Typography variant="h5" component="p" gutterBottom sx={{ fontWeight: "bold" }}>
-          {subtitle}
-        </Typography>
+        {subtitle && (
+          <Typography variant="h5" component="p" gutterBottom sx={{ fontWeight: "bold" }}>
+            {subtitle}
+          </Typography>
+        )}
       </Box>
     </Box>
   );
