@@ -14,12 +14,21 @@ import MenuItem from "@mui/material/MenuItem";
 import PersonIcon from "@mui/icons-material/Person";
 import SchoolIcon from "@mui/icons-material/School";
 import { useTheme } from "@mui/material/styles";
+import { useRouter } from "next/navigation";
 
-const pages = ["Criar", "Explorar", "Sobre"];
-const settings = ["Account", "Logout"];
+const pages = [
+  { name: "Criar", path: "/create" },
+  { name: "Explorar", path: "/explore" },
+  { name: "Sobre", path: "/about" },
+];
+const settings = [
+  { name: "Account", path: "/account" },
+  { name: "Logout", path: "/logout" },
+];
 
 function NavBar() {
   const theme = useTheme();
+  const router = useRouter();
 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
@@ -31,12 +40,18 @@ function NavBar() {
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleCloseNavMenu = () => {
+  const handleCloseNavMenu = (path?: string) => {
     setAnchorElNav(null);
+    if (path) {
+      router.push(path);
+    }
   };
 
-  const handleCloseUserMenu = () => {
+  const handleCloseUserMenu = (path?: string) => {
     setAnchorElUser(null);
+    if (path) {
+      router.push(path);
+    }
   };
 
   return (
@@ -86,12 +101,12 @@ function NavBar() {
                 horizontal: "left",
               }}
               open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
+              onClose={() => handleCloseNavMenu()}
               sx={{ display: { xs: "block", md: "none" } }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography sx={{ textAlign: "center" }}>{page}</Typography>
+                <MenuItem key={page.name} onClick={() => handleCloseNavMenu(page.path)}>
+                  <Typography sx={{ textAlign: "center" }}>{page.name}</Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -117,8 +132,8 @@ function NavBar() {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
-              <Button key={page} onClick={handleCloseNavMenu} sx={{ my: 2, color: "white", display: "block" }}>
-                {page}
+              <Button key={page.name} onClick={() => handleCloseNavMenu(page.path)} sx={{ my: 2, color: "white", display: "block" }}>
+                {page.name}
               </Button>
             ))}
           </Box>
@@ -154,11 +169,11 @@ function NavBar() {
                 horizontal: "right",
               }}
               open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
+              onClose={() => handleCloseUserMenu()}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography sx={{ textAlign: "center" }}>{setting}</Typography>
+                <MenuItem key={setting.name} onClick={() => handleCloseUserMenu(setting.path)}>
+                  <Typography sx={{ textAlign: "center" }}>{setting.name}</Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -168,4 +183,5 @@ function NavBar() {
     </AppBar>
   );
 }
+
 export default NavBar;

@@ -4,8 +4,8 @@ import CreateContentForm from "@/components/CreateContentForm/CreateContentForm"
 import { Button, Drawer } from "@mui/material";
 import React, { useState } from "react";
 
-const Teste = () => {
-  const [open, setOpen] = useState(true);
+const Create = () => {
+  const [open, setOpen] = useState(false);
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
@@ -21,4 +21,4 @@ const Teste = () => {
   );
 };
 
-export default Teste;
+export default Create;
