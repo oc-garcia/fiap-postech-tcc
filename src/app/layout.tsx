@@ -5,6 +5,7 @@ import Providers from "./providers";
 import { Roboto } from "next/font/google";
 import NavBar from "@/components/NavBar/NavBar";
 import Footer from "@/components/Footer/Footer";
+import { Box } from "@mui/material";
 
 const roboto = Roboto({
   weight: ["300", "400", "500", "700"],
@@ -28,8 +29,10 @@ export default function RootLayout({
       <body className={roboto.variable}>
         <Providers>
           <NavBar />
-          <main>{children}</main>
-          <Footer/>
+          <Box component="main" sx={{ display: "flex", flexDirection: "column" }}>
+            {children}
+          </Box>
+          <Footer />
         </Providers>
       </body>
     </html>
