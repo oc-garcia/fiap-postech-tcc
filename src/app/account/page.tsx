@@ -30,7 +30,7 @@ const mockUser: UserWithContents = {
       upvotes: 10,
       downvotes: 2,
       tags: "tag1, tag2",
-      subject: SchoolSubject.Matematica,
+      subject: "Matematica",
       subdisciplineId: null,
     },
     {
@@ -46,7 +46,7 @@ const mockUser: UserWithContents = {
       upvotes: 5,
       downvotes: 1,
       tags: "tag3, tag4",
-      subject: SchoolSubject.Historia,
+      subject: "Historia",
       subdisciplineId: null,
     },
   ],
