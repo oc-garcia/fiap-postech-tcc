@@ -19,10 +19,11 @@ import { useRouter } from "next/navigation";
 const pages = [
   { name: "Criar", path: "/create" },
   { name: "Explorar", path: "/explore" },
-  { name: "Sobre", path: "/about" },
+  { name: "Saiba Mais", path: "/about" },
 ];
 const settings = [
-  { name: "Account", path: "/account" },
+  { name: "Conta", path: "/account" },
+  { name: "Login", path: "/login" },
   { name: "Logout", path: "/logout" },
 ];
 
