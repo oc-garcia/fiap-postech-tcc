@@ -72,8 +72,7 @@ function NavBar() {
               letterSpacing: ".3rem",
               color: "inherit",
               textDecoration: "none",
-            }}
-          >
+            }}>
             EducaPro
           </Typography>
 
@@ -84,8 +83,7 @@ function NavBar() {
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
-              color="inherit"
-            >
+              color="inherit">
               <MenuIcon />
             </IconButton>
             <Menu
@@ -102,8 +100,7 @@ function NavBar() {
               }}
               open={Boolean(anchorElNav)}
               onClose={() => handleCloseNavMenu()}
-              sx={{ display: { xs: "block", md: "none" } }}
-            >
+              sx={{ display: { xs: "block", md: "none" } }}>
               {pages.map((page) => (
                 <MenuItem key={page.name} onClick={() => handleCloseNavMenu(page.path)}>
                   <Typography sx={{ textAlign: "center" }}>{page.name}</Typography>
@@ -126,33 +123,31 @@ function NavBar() {
               letterSpacing: ".3rem",
               color: "inherit",
               textDecoration: "none",
-            }}
-          >
+            }}>
             EducaPro
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
-              <Button key={page.name} onClick={() => handleCloseNavMenu(page.path)} sx={{ my: 2, color: "white", display: "block" }}>
+              <Button
+                key={page.name}
+                onClick={() => handleCloseNavMenu(page.path)}
+                sx={{ my: 2, color: "white", display: "block" }}>
                 {page.name}
               </Button>
             ))}
           </Box>
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
+            <Tooltip title="Configurações">
               <IconButton
                 onClick={handleOpenUserMenu}
                 sx={{
                   p: 1,
-                  backgroundColor: "white",
+                  backgroundColor: theme.palette.primary.main,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  "&:hover .MuiSvgIcon-root": {
-                    color: "white",
-                  },
-                }}
-              >
-                <PersonIcon sx={{ color: theme.palette.primary.main }} />
+                }}>
+                <PersonIcon sx={{ color: "white" }} />
               </IconButton>
             </Tooltip>
             <Menu
@@ -169,8 +164,7 @@ function NavBar() {
                 horizontal: "right",
               }}
               open={Boolean(anchorElUser)}
-              onClose={() => handleCloseUserMenu()}
-            >
+              onClose={() => handleCloseUserMenu()}>
               {settings.map((setting) => (
                 <MenuItem key={setting.name} onClick={() => handleCloseUserMenu(setting.path)}>
                   <Typography sx={{ textAlign: "center" }}>{setting.name}</Typography>
