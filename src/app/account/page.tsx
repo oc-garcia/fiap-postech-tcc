@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { Box, Container, Typography, Paper, List, ListItem, ListItemText, Skeleton } from "@mui/material";
 import Hero from "@/components/Hero/Hero";
-import { User, Content } from "@prisma/client"; // Importa os tipos diretamente do Prisma
+import { User, Content, SchoolSubject } from "@prisma/client"; // Importa os tipos diretamente do Prisma
 
 type UserWithContents = User & {
   createdContents: Content[];
@@ -30,7 +30,7 @@ const mockUser: UserWithContents = {
       upvotes: 10,
       downvotes: 2,
       tags: "tag1, tag2",
-      subject: "Matematica",
+      subject: SchoolSubject.Geografia,
       subdisciplineId: null,
     },
     {
@@ -46,7 +46,7 @@ const mockUser: UserWithContents = {
       upvotes: 5,
       downvotes: 1,
       tags: "tag3, tag4",
-      subject: "Historia",
+      subject: SchoolSubject.Ingles,
       subdisciplineId: null,
     },
   ],

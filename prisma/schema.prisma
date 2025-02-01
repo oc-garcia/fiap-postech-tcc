@@ -1,6 +1,6 @@
 datasource db {
   provider = "sqlite"
-  url      = "file:./dev.db"
+  url      = "file:./dev.db?mode=rw"
 }
 
 generator client {
@@ -51,17 +51,9 @@ model Content {
   tags            String?
   visibility      String
   subject         SchoolSubject // Usa o enum definido acima
-  subdisciplineId String?
   author          User          @relation(fields: [authorId], references: [id])
   comments        Comment[]
   votes           Vote[]
-  contentCreationForms ContentCreationForm[]
-}
-
-model Subdiscipline {
-  id       String        @id @default(uuid())
-  name     String
-  subject  SchoolSubject // Usa o enum definido acima
 }
 
 model Comment {
@@ -82,15 +74,6 @@ model Vote {
   voteDate  DateTime @default(now())
   content   Content  @relation(fields: [contentId], references: [id])
   user      User     @relation(fields: [userId], references: [id])
-}
-
-model ContentCreationForm {
-  id                   String   @id @default(uuid())
-  fields               String
-  generationParameters String
-  submissionDate       DateTime @default(now())
-  generatedContentId   String
-  content              Content  @relation(fields: [generatedContentId], references: [id])
 }
 
 model ContentFeed {

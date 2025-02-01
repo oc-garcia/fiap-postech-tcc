@@ -1,4 +1,5 @@
 import axios from "axios";
+import { saveContent } from "./saveContent";
 
 interface FormData {
   title: string;
@@ -10,7 +11,7 @@ interface FormData {
 
 export const generateContentFromForm = async (formData: FormData) => {
   try {
-    const response = await axios.post("/api/content", formData);
+    const response = await axios.post("/api/create-content", formData);
 
     if (response.status !== 200) {
       throw new Error("Falha ao gerar conteúdo com a OpenAI.");
@@ -18,19 +19,11 @@ export const generateContentFromForm = async (formData: FormData) => {
 
     const generatedContent = response.data;
 
-    const saveResponse = await axios.post("/api/saveContent", {
-      ...formData,
-      generatedContent: generatedContent.generatedContent,
-      status: generatedContent.status,
-      authorId: "some-author-id",
-      visibility: "public",
-    });
+    const data = { ...formData, ...generatedContent, visibility: "public", authorId: "1" };
 
-    if (saveResponse.status !== 200) {
-      throw new Error("Falha ao salvar conteúdo no banco de dados.");
-    }
+    const saveResponse = await saveContent(data);
 
-    return saveResponse.data;
+    return saveResponse;
   } catch (error) {
     console.error("Erro ao gerar conteúdo:", error);
     throw new Error("Falha ao gerar conteúdo com a OpenAI.");
