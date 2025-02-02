@@ -35,9 +35,6 @@ const ContentCard: React.FC<ContentCardProps> = ({ content }) => {
         <Button variant="contained" color="primary">
           Ver Mais
         </Button>
-        <Button variant="contained" color="primary" startIcon={<DownloadIcon />} onClick={handleDownload}>
-          .PDF
-        </Button>
       </Box>
 
       <Accordion sx={{ mt: 2 }}>
@@ -57,6 +54,9 @@ const ContentCard: React.FC<ContentCardProps> = ({ content }) => {
             }}>
             <ReactMarkdown>{content.generatedContent}</ReactMarkdown>
           </div>
+          <Button variant="contained" color="primary" startIcon={<DownloadIcon />} onClick={handleDownload}>
+            .PDF
+          </Button>
         </AccordionDetails>
       </Accordion>
     </Paper>
