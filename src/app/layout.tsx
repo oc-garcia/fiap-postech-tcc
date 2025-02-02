@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Providers from "./providers";
-
+import { Analytics } from "@vercel/analytics/react";
 import { Roboto } from "next/font/google";
 import NavBar from "@/components/NavBar/NavBar";
 import Footer from "@/components/Footer/Footer";
@@ -33,6 +33,7 @@ export default function RootLayout({
             {children}
           </Box>
           <Footer />
+          <Analytics />
         </Providers>
       </body>
     </html>
