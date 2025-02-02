@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
-import { Box, Typography, Paper, Button } from "@mui/material";
+import { Box, Typography, Paper, Button, Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
 import DownloadIcon from "@mui/icons-material/Download";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ReactMarkdown from "react-markdown";
 import { Content } from "@prisma/client";
 import { generatePdfFromElement } from "@/utils/generatePdf";
@@ -39,17 +40,25 @@ const ContentCard: React.FC<ContentCardProps> = ({ content }) => {
         </Button>
       </Box>
 
-      <div
-        ref={markdownRef}
-        style={{
-          marginTop: "16px",
-          padding: "16px",
-          backgroundColor: "#fff",
-          color: "#000",
-          borderRadius: "4px",
-        }}>
-        <ReactMarkdown>{content.generatedContent}</ReactMarkdown>
-      </div>
+      <Accordion sx={{ mt: 2 }}>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon sx={{ color: "white" }} />}
+          sx={{ backgroundColor: "primary.main", color: "white" }}>
+          <Typography variant="h6">Conteúdo Gerado</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <div
+            ref={markdownRef}
+            style={{
+              padding: "16px",
+              backgroundColor: "#fff",
+              color: "#000",
+              borderRadius: "4px",
+            }}>
+            <ReactMarkdown>{content.generatedContent}</ReactMarkdown>
+          </div>
+        </AccordionDetails>
+      </Accordion>
     </Paper>
   );
 };

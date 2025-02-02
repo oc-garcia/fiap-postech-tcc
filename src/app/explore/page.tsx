@@ -43,6 +43,10 @@ const Explore = () => {
             <Skeleton variant="rectangular" width="100%" height={118} sx={{ mb: 2 }} />
             <Skeleton variant="rectangular" width="100%" height={118} sx={{ mb: 2 }} />
           </>
+        ) : contents.length === 0 ? (
+          <Typography variant="body1" color="textSecondary">
+            Nenhum conteúdo encontrado.
+          </Typography>
         ) : (
           contents.map((content) => <ContentCard key={content.id} content={content} />)
         )}

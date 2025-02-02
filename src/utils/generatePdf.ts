@@ -7,11 +7,25 @@ export const generatePdfFromElement = async (element: HTMLElement, fileName: str
 
   const pdf = new jsPDF("p", "mm", "a4");
   const pdfWidth = pdf.internal.pageSize.getWidth();
+  const pdfHeight = pdf.internal.pageSize.getHeight();
+  const canvasWidth = canvas.width;
+  const canvasHeight = canvas.height;
 
-  const imgProps = pdf.getImageProperties(imgData);
   const imgWidth = pdfWidth;
-  const imgHeight = (imgProps.height * imgWidth) / imgProps.width;
+  const imgHeight = (canvasHeight * imgWidth) / canvasWidth;
 
-  pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+  let heightLeft = imgHeight;
+  let position = 0;
+
+  pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+  heightLeft -= pdfHeight;
+
+  while (heightLeft > 0) {
+    position = heightLeft - imgHeight;
+    pdf.addPage();
+    pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+    heightLeft -= pdfHeight;
+  }
+
   pdf.save(`${fileName}.pdf`);
 };
