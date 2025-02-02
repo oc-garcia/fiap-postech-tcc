@@ -31,7 +31,6 @@ const mockUser: UserWithContents = {
       downvotes: 2,
       tags: "tag1, tag2",
       subject: SchoolSubject.Geografia,
-      subdisciplineId: null,
     },
     {
       id: "2",
@@ -47,7 +46,6 @@ const mockUser: UserWithContents = {
       downvotes: 1,
       tags: "tag3, tag4",
       subject: SchoolSubject.Ingles,
-      subdisciplineId: null,
     },
   ],
 };

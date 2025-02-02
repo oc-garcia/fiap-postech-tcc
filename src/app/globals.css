@@ -15,6 +15,7 @@ body {
   padding: 0;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
 }
 
 main {
@@ -23,7 +24,7 @@ main {
 
 /* Custom scrollbar styles */
 ::-webkit-scrollbar {
-  width: 8px; 
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -32,8 +33,8 @@ main {
 
 ::-webkit-scrollbar-thumb {
   background-color: #1976d2; /* Color of the scrollbar thumb (primary.main) */
-  border-radius: 10px; 
-  border: 2px solid #f1f1f1; 
+  border-radius: 10px;
+  border: 2px solid #f1f1f1;
 }
 
 ::-webkit-scrollbar-thumb:hover {

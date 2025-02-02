@@ -1,5 +1,5 @@
 import axios from "axios";
-import { saveContent } from "./saveContent";
+import { postContent } from "./postContent";
 
 interface FormData {
   title: string;
@@ -21,7 +21,7 @@ export const generateContentFromForm = async (formData: FormData) => {
 
     const data = { ...formData, ...generatedContent, visibility: "public", authorId: "1" };
 
-    const saveResponse = await saveContent(data);
+    const saveResponse = await postContent(data);
 
     return saveResponse;
   } catch (error) {

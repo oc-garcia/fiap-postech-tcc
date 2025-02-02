@@ -13,12 +13,12 @@ interface GeneratedContent {
   status: string;
 }
 
-interface SaveContentData extends FormData, GeneratedContent {
+interface PostContentData extends FormData, GeneratedContent {
   authorId: string;
   visibility: string;
 }
 
-export const saveContent = async (data: SaveContentData) => {
+export const postContent = async (data: PostContentData) => {
   try {
     const saveResponse = await axios.post("/api/save-content", data);
 
