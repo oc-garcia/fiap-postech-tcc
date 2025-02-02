@@ -13,6 +13,7 @@ import { toFormikValidationSchema } from "zod-formik-adapter";
 import { SchoolSubject } from "@prisma/client";
 import useGetSubdisciplines from "@/hooks/useGetSubdisciplines";
 import { generateContentFromForm } from "@/services/createContent";
+import { AlertColor, CircularProgress } from "@mui/material";
 
 const contentSchema = z.object({
   title: z.string().min(3, "O título deve ter pelo menos 3 caracteres"),
@@ -22,7 +23,12 @@ const contentSchema = z.object({
   tags: z.array(z.string()).min(1, "Selecione pelo menos uma tag"),
 });
 
-const CreateContentForm = () => {
+interface CreateContentFormProps {
+  onSuccess: () => void;
+  setSnackbar: (snackbar: { open: boolean; message: string; severity: AlertColor }) => void;
+}
+
+const CreateContentForm: React.FC<CreateContentFormProps> = ({ onSuccess, setSnackbar }) => {
   const [selectedSubject, setSelectedSubject] = useState("");
 
   const formik = useFormik({
@@ -35,12 +41,13 @@ const CreateContentForm = () => {
     },
     validationSchema: toFormikValidationSchema(contentSchema),
     onSubmit: async (values) => {
-      console.log("Valores do formulário", values);
       try {
-        const generatedContent = await generateContentFromForm(values);
-        console.log("Conteúdo gerado:", generatedContent);
+        await generateContentFromForm(values);
+        setSnackbar({ open: true, message: "Conteúdo criado com sucesso!", severity: "success" });
+        onSuccess();
       } catch (error) {
         console.error(error);
+        setSnackbar({ open: true, message: "Erro ao criar conteúdo.", severity: "error" });
       }
     },
   });
@@ -145,8 +152,14 @@ const CreateContentForm = () => {
         </Select>
       </FormControl>
 
-      <Button type="submit" variant="contained" color="primary" sx={{ marginTop: 2 }}>
-        Enviar
+      <Button
+        type="submit"
+        variant="contained"
+        color="primary"
+        sx={{ marginTop: 2 }}
+        disabled={formik.isSubmitting}
+        startIcon={formik.isSubmitting ? <CircularProgress size="1rem" /> : null}>
+        {formik.isSubmitting ? "Enviando..." : "Enviar"}
       </Button>
     </Box>
   );

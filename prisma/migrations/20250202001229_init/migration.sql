@@ -23,15 +23,7 @@ CREATE TABLE "Content" (
     "tags" TEXT,
     "visibility" TEXT NOT NULL,
     "subject" TEXT NOT NULL,
-    "subdisciplineId" TEXT,
     CONSTRAINT "Content_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
-);
-
--- CreateTable
-CREATE TABLE "Subdiscipline" (
-    "id" TEXT NOT NULL PRIMARY KEY,
-    "name" TEXT NOT NULL,
-    "subject" TEXT NOT NULL
 );
 
 -- CreateTable
@@ -54,25 +46,6 @@ CREATE TABLE "Vote" (
     "voteDate" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT "Vote_contentId_fkey" FOREIGN KEY ("contentId") REFERENCES "Content" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT "Vote_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
-);
-
--- CreateTable
-CREATE TABLE "ContentCreationForm" (
-    "id" TEXT NOT NULL PRIMARY KEY,
-    "fields" TEXT NOT NULL,
-    "generationParameters" TEXT NOT NULL,
-    "submissionDate" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "generatedContentId" TEXT NOT NULL,
-    CONSTRAINT "ContentCreationForm_generatedContentId_fkey" FOREIGN KEY ("generatedContentId") REFERENCES "Content" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
-);
-
--- CreateTable
-CREATE TABLE "ContentFeed" (
-    "id" TEXT NOT NULL PRIMARY KEY,
-    "userId" TEXT NOT NULL,
-    "visibleContents" TEXT NOT NULL,
-    "sortingCriteria" TEXT NOT NULL,
-    CONSTRAINT "ContentFeed_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateIndex

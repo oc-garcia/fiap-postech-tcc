@@ -12,6 +12,9 @@ import {
   AccordionSummary,
   AccordionDetails,
   IconButton,
+  AlertColor,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CloseIcon from "@mui/icons-material/Close";
@@ -19,6 +22,11 @@ import React, { useState } from "react";
 
 const Create = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; severity: AlertColor }>({
+    open: false,
+    message: "",
+    severity: "success",
+  });
 
   const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
     if (
@@ -28,6 +36,14 @@ const Create = () => {
       return;
     }
     setDrawerOpen(open);
+  };
+
+  const handleSuccess = () => {
+    setDrawerOpen(false);
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbar({ ...snackbar, open: false });
   };
 
   return (
@@ -58,7 +74,7 @@ const Create = () => {
             <IconButton onClick={toggleDrawer(false)} sx={{ position: "absolute", top: 16, right: 16 }}>
               <CloseIcon />
             </IconButton>
-            <CreateContentForm />
+            <CreateContentForm onSuccess={handleSuccess} setSnackbar={setSnackbar} />
           </Box>
         </Drawer>
         <Box sx={{ width: "100%", maxWidth: 800, mt: 4 }}>
@@ -132,6 +148,15 @@ const Create = () => {
           </Accordion>
         </Box>
       </Container>
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}>
+        <Alert onClose={handleCloseSnackbar} severity={snackbar.severity}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

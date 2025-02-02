@@ -34,7 +34,6 @@ model User {
   createdContents     Content[]
   comments            Comment[]
   votes               Vote[]
-  contentFeeds        ContentFeed[]
 }
 
 model Content {
@@ -50,7 +49,7 @@ model Content {
   downvotes       Int           @default(0)
   tags            String?
   visibility      String
-  subject         SchoolSubject // Usa o enum definido acima
+  subject         SchoolSubject 
   author          User          @relation(fields: [authorId], references: [id])
   comments        Comment[]
   votes           Vote[]
@@ -74,12 +73,4 @@ model Vote {
   voteDate  DateTime @default(now())
   content   Content  @relation(fields: [contentId], references: [id])
   user      User     @relation(fields: [userId], references: [id])
-}
-
-model ContentFeed {
-  id              String   @id @default(uuid())
-  userId          String
-  visibleContents String
-  sortingCriteria String
-  user            User     @relation(fields: [userId], references: [id])
 }
