@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { Box, Typography, Paper, Button, Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
+import { Box, Typography, Paper, Button, Accordion, AccordionSummary, AccordionDetails, Chip } from "@mui/material";
 import DownloadIcon from "@mui/icons-material/Download";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ReactMarkdown from "react-markdown";
@@ -31,12 +31,24 @@ const ContentCard: React.FC<ContentCardProps> = ({ content }) => {
         {new Date(content.creationDate).toLocaleDateString("pt-BR")}
       </Typography>
 
-      <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}>
+      <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <Box sx={{ mt: 2 }}>
+          <Typography variant="body2" color="textSecondary">
+            <strong>Disciplina:</strong> {content.subject}
+          </Typography>
+          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 1, flexWrap: "wrap" }}>
+            <Typography variant="body2" color="textSecondary">
+              <strong>Tags:</strong>
+            </Typography>
+            {content.tags.split(",").map((tag) => (
+              <Chip key={tag} label={tag.trim()} sx={{ mr: 1, mt: 1 }} />
+            ))}
+          </Box>
+        </Box>
         <Button variant="contained" color="primary">
           Ver Mais
         </Button>
       </Box>
-
       <Accordion sx={{ mt: 2 }}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon sx={{ color: "white" }} />}
@@ -59,6 +71,7 @@ const ContentCard: React.FC<ContentCardProps> = ({ content }) => {
           </Button>
         </AccordionDetails>
       </Accordion>
+      {/* <pre>{JSON.stringify(content, null, 2)}</pre> */}
     </Paper>
   );
 };

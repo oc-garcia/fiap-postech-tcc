@@ -9,7 +9,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     const contents = await prisma.content.findMany({
       include: {
-        author: true,
+        author: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
         comments: true,
         votes: true,
       },

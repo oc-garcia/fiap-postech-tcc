@@ -52,6 +52,13 @@ const CreateContentForm: React.FC<CreateContentFormProps> = ({ onSuccess, setSna
     },
   });
 
+  const handleSubjectChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    const newSubject = event.target.value as string;
+    setSelectedSubject(newSubject);
+    formik.setFieldValue("subject", newSubject);
+    formik.setFieldValue("tags", []); // Zera o array de tags
+  };
+
   const schoolSubjects = Object.values(SchoolSubject);
   const subdisciplineList = useGetSubdisciplines(selectedSubject);
 
@@ -116,10 +123,7 @@ const CreateContentForm: React.FC<CreateContentFormProps> = ({ onSuccess, setSna
         label="Disciplina"
         name="subject"
         value={formik.values.subject}
-        onChange={(e) => {
-          formik.handleChange(e);
-          setSelectedSubject(e.target.value);
-        }}
+        onChange={handleSubjectChange}
         onBlur={formik.handleBlur}
         error={formik.touched.subject && Boolean(formik.errors.subject)}
         helperText={formik.touched.subject && formik.errors.subject}
