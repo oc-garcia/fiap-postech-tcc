@@ -5,6 +5,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ReactMarkdown from "react-markdown";
 import { Content } from "@prisma/client";
 import { generatePdfFromElement } from "@/utils/generatePdf";
+import createPptFromContent from "@/utils/generatePpt";
 
 interface ContentCardProps {
   content: Content;
@@ -14,8 +15,10 @@ const ContentCard: React.FC<ContentCardProps> = ({ content }) => {
   const markdownRef = useRef<HTMLDivElement>(null);
 
   const handleDownload = async () => {
-    if (markdownRef.current) {
+    if (content.type != "apresentação" && markdownRef.current) {
       await generatePdfFromElement(markdownRef.current, content.title);
+    } else {
+      createPptFromContent(content.generatedContent, content.title);
     }
   };
 
@@ -66,9 +69,16 @@ const ContentCard: React.FC<ContentCardProps> = ({ content }) => {
             }}>
             <ReactMarkdown>{content.generatedContent}</ReactMarkdown>
           </div>
-          <Button variant="contained" color="primary" startIcon={<DownloadIcon />} onClick={handleDownload}>
-            .PDF
-          </Button>
+          {content.type === "apresentação" && (
+            <Button variant="contained" color="primary" startIcon={<DownloadIcon />} onClick={handleDownload}>
+              .PPT
+            </Button>
+          )}
+          {content.type != "apresentação" && (
+            <Button variant="contained" color="primary" startIcon={<DownloadIcon />} onClick={handleDownload}>
+              .PDF
+            </Button>
+          )}
         </AccordionDetails>
       </Accordion>
       {/* <pre>{JSON.stringify(content, null, 2)}</pre> */}

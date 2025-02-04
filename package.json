@@ -27,6 +27,7 @@
     "jspdf": "2.5.2",
     "next": "15.1.6",
     "openai": "4.81.0",
+    "pptxgenjs": "^3.12.0",
     "prisma": "6.2.1",
     "react": "19.0.0",
     "react-dom": "19.0.0",
