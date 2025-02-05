@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, Container, TextField, Button, Typography, Paper, Link } from '@mui/material';
 import { useFormik } from 'formik';
 import * as z from 'zod';
@@ -17,6 +17,8 @@ const registerSchema = z.object({
 });
 
 const Register = () => {
+  const [message, setMessage] = useState("");
+
   const formik = useFormik({
     initialValues: {
       name: '',
@@ -25,9 +27,30 @@ const Register = () => {
       confirmPassword: '',
     },
     validationSchema: toFormikValidationSchema(registerSchema),
-    onSubmit: (values) => {
-      console.log('Valores do formulário', values);
-      // Adicione aqui a lógica de registro
+    onSubmit: async (values) => {
+      setMessage("");
+      try {
+        const response = await fetch("/api/create-user", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: values.name,
+            email: values.email,
+            password: values.password,
+            role: "user",
+            contentPreferences: "",
+          }),
+        });
+        
+        const data = await response.json();
+        if (response.ok) {
+          setMessage("Usuário criado com sucesso!");
+        } else {
+          setMessage(data.message || "Erro ao criar usuário.");
+        }
+      } catch (error) {
+        setMessage("Erro ao conectar com o servidor.");
+      }
     },
   });
 
@@ -38,6 +61,7 @@ const Register = () => {
           <Typography variant="h4" component="h1" gutterBottom>
             Registrar
           </Typography>
+          {message && <Typography color="error" sx={{ mb: 2 }}>{message}</Typography>}
           <form onSubmit={formik.handleSubmit}>
             <TextField
               fullWidth
