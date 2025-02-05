@@ -49,6 +49,7 @@ const Register = () => {
           setMessage(data.message || "Erro ao criar usuário.");
         }
       } catch (error) {
+        console.error(error);
         setMessage("Erro ao conectar com o servidor.");
       }
     },
