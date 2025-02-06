@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Box, Container, TextField, Button, Typography, Paper, Link } from "@mui/material";
+import { Box, Container, TextField, Button, Typography, Paper, Link, Snackbar, Alert } from "@mui/material";
 import { useFormik } from "formik";
 import * as z from "zod";
 import { toFormikValidationSchema } from "zod-formik-adapter";
@@ -23,7 +23,22 @@ const registerSchema = z
   });
 
 const Register = () => {
-  const [message, setMessage] = useState("");
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">("success");
+
+  const handleToastClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackbarOpen(false);
+  };
+
+  const showToast = (message: string, severity: "success" | "error") => {
+    setSnackbarMessage(message);
+    setSnackbarSeverity(severity);
+    setSnackbarOpen(true);
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -34,7 +49,6 @@ const Register = () => {
     },
     validationSchema: toFormikValidationSchema(registerSchema),
     onSubmit: async (values) => {
-      setMessage("");
       try {
         const data = await createUser({
           name: values.name,
@@ -44,13 +58,13 @@ const Register = () => {
           contentPreferences: "",
         });
         if (data.success) {
-          setMessage("Usuário criado com sucesso!");
+          showToast("Usuário criado com sucesso!", "success");
         } else {
-          setMessage(data.message || "Erro ao criar usuário.");
+          showToast(data.message || "Erro ao criar usuário.", "error");
         }
       } catch (error) {
         console.error(error);
-        setMessage("Erro ao conectar com o servidor.");
+        showToast("Erro ao conectar com o servidor.", "error");
       }
     },
   });
@@ -60,7 +74,7 @@ const Register = () => {
       sx={{
         display: "flex",
         flexDirection: "column",
-        flex: 1,
+        minHeight: "100vh",
         justifyContent: "center",
         alignItems: "center",
       }}>
@@ -69,11 +83,6 @@ const Register = () => {
           <Typography variant="h4" component="h1" gutterBottom>
             Registrar
           </Typography>
-          {message && (
-            <Typography color="error" sx={{ mb: 2 }}>
-              {message}
-            </Typography>
-          )}
           <form onSubmit={formik.handleSubmit}>
             <TextField
               fullWidth
@@ -140,6 +149,15 @@ const Register = () => {
           </Box>
         </Paper>
       </Container>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleToastClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}>
+        <Alert onClose={handleToastClose} severity={snackbarSeverity}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
