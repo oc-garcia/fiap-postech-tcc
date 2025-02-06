@@ -29,7 +29,7 @@ export default function RootLayout({
       <body className={roboto.variable}>
         <Providers>
           <NavBar />
-          <Box component="main" sx={{ display: "flex", flexDirection: "column" }}>
+          <Box component="main" sx={{ display: "flex", flexDirection: "column", paddingY: 2 }}>
             {children}
           </Box>
           <Footer />

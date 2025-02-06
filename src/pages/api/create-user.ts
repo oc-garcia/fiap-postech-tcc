@@ -30,7 +30,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       },
     });
 
-    return res.status(201).json({ message: "User created successfully", user: { id: newUser.id, name: newUser.name, email: newUser.email, role: newUser.role } });
+    return res
+      .status(201)
+      .json({
+        message: "User created successfully",
+        user: { id: newUser.id, name: newUser.name, email: newUser.email, role: newUser.role },
+      });
   } catch (error) {
     console.error("Erro ao criar usuário:", error);
     return res.status(500).json({ message: "Falha ao criar usuário." });

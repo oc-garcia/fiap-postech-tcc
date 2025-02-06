@@ -63,7 +63,7 @@ const Account = () => {
   }, []);
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+    <Box sx={{ display: "flex", flexDirection: "column", flex: 1 }}>
       <Hero
         title="Conta"
         subtitle="Gerencie suas informações e preferências"
