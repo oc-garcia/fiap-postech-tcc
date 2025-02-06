@@ -1,7 +1,18 @@
 "use client";
 
 import React, { useState } from "react";
-import { Box, Container, TextField, Button, Typography, Paper, Link, Snackbar, Alert } from "@mui/material";
+import {
+  Box,
+  Container,
+  TextField,
+  Button,
+  Typography,
+  Paper,
+  Link,
+  Snackbar,
+  Alert,
+  CircularProgress,
+} from "@mui/material";
 import { useFormik } from "formik";
 import * as z from "zod";
 import { toFormikValidationSchema } from "zod-formik-adapter";
@@ -74,7 +85,7 @@ const Register = () => {
       sx={{
         display: "flex",
         flexDirection: "column",
-        minHeight: "100vh",
+        flex: 1,
         justifyContent: "center",
         alignItems: "center",
       }}>
@@ -138,8 +149,15 @@ const Register = () => {
               variant="outlined"
               required
             />
-            <Button variant="contained" color="primary" type="submit" fullWidth sx={{ mt: 2 }}>
-              Registrar
+            <Button
+              variant="contained"
+              color="primary"
+              type="submit"
+              fullWidth
+              sx={{ mt: 2 }}
+              disabled={formik.isSubmitting}
+              startIcon={formik.isSubmitting ? <CircularProgress size="1rem" /> : null}>
+              {formik.isSubmitting ? "Registrando..." : "Registrar"}
             </Button>
           </form>
           <Box sx={{ mt: 2, textAlign: "center" }}>
