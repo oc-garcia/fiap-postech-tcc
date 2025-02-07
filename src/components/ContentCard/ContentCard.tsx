@@ -257,7 +257,7 @@ const ContentCard: React.FC<ContentCardProps> = ({
           Você precisa estar logado para votar.
         </Alert>
       </Snackbar>
-      <pre>{JSON.stringify(content, null, 2)}</pre>
+      {/* <pre>{JSON.stringify(content, null, 2)}</pre> */}
     </Paper>
   );
 };
