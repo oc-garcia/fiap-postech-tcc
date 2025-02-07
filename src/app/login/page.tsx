@@ -1,11 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Box, Container, TextField, Button, Typography, Paper, Link, Snackbar, Alert } from "@mui/material";
 import { useFormik } from "formik";
 import * as z from "zod";
 import { toFormikValidationSchema } from "zod-formik-adapter";
 import { loginUser } from "@/services/login";
+import { useRouter } from "next/navigation";
+import { AuthContext } from "@/context/AuthContext";
 
 const loginSchema = z.object({
   email: z.string().email("E-mail inválido").nonempty("E-mail é obrigatório"),
@@ -13,6 +15,10 @@ const loginSchema = z.object({
 });
 
 const Login = () => {
+  const { setIsLoggedIn } = useContext(AuthContext);
+
+  const router = useRouter();
+
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">("success");
@@ -42,7 +48,8 @@ const Login = () => {
       if (data.success && data.token) {
         localStorage.setItem("token", data.token);
         showToast("Login realizado com sucesso!", "success");
-        // Implement additional actions like redirection here...
+        setIsLoggedIn(true);
+        setTimeout(() => router.push("/explore"), 1000);
       } else {
         showToast(data.message, "error");
       }
@@ -95,7 +102,11 @@ const Login = () => {
           </Box>
         </Paper>
       </Container>
-      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleToastClose}>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleToastClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}>
         <Alert onClose={handleToastClose} severity={snackbarSeverity} sx={{ width: "100%" }}>
           {snackbarMessage}
         </Alert>

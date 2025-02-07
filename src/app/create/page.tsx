@@ -18,9 +18,12 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CloseIcon from "@mui/icons-material/Close";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { AuthContext } from "@/context/AuthContext";
 
 const Create = () => {
+  const { isLoggedIn } = useContext(AuthContext);
+
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; severity: AlertColor }>({
     open: false,
@@ -36,6 +39,18 @@ const Create = () => {
       return;
     }
     setDrawerOpen(open);
+  };
+
+  const handleOpenForm = () => {
+    if (!isLoggedIn) {
+      setSnackbar({
+        open: true,
+        message: "Você precisa estar logado para criar conteúdo.",
+        severity: "warning",
+      });
+      return;
+    }
+    setDrawerOpen(true);
   };
 
   const handleSuccess = () => {
@@ -62,7 +77,7 @@ const Create = () => {
           alignItems: "center",
           justifyContent: "center",
         }}>
-        <Button variant="contained" color="primary" onClick={toggleDrawer(true)}>
+        <Button variant="contained" color="primary" onClick={handleOpenForm}>
           Abrir Formulário de Criação
         </Button>
         <Drawer

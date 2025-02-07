@@ -17,6 +17,7 @@ import { useFormik } from "formik";
 import * as z from "zod";
 import { toFormikValidationSchema } from "zod-formik-adapter";
 import { createUser } from "@/services/createUser";
+import { useRouter } from "next/navigation";
 
 const registerSchema = z
   .object({
@@ -34,6 +35,8 @@ const registerSchema = z
   });
 
 const Register = () => {
+  const router = useRouter();
+
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">("success");
@@ -70,6 +73,7 @@ const Register = () => {
         });
         if (data.success) {
           showToast("Usuário criado com sucesso!", "success");
+          setTimeout(() => router.push("/login"), 1000);
         } else {
           showToast(data.message || "Erro ao criar usuário.", "error");
         }

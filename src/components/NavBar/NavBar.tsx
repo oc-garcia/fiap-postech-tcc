@@ -15,24 +15,49 @@ import PersonIcon from "@mui/icons-material/Person";
 import SchoolIcon from "@mui/icons-material/School";
 import { useTheme } from "@mui/material/styles";
 import { useRouter } from "next/navigation";
+import { AuthContext } from "@/context/AuthContext";
 
 const pages = [
   { name: "Criar", path: "/create" },
   { name: "Explorar", path: "/explore" },
   { name: "Saiba Mais", path: "/about" },
 ];
-const settings = [
-  { name: "Conta", path: "/account" },
-  { name: "Login", path: "/login" },
-  { name: "Logout", path: "/logout" },
-];
 
 function NavBar() {
+  const { isLoggedIn, setIsLoggedIn } = React.useContext(AuthContext);
+
   const theme = useTheme();
   const router = useRouter();
 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+
+  // Initially set the login status
+  React.useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token);
+  }, []);
+
+  // Listen for custom token change events
+  React.useEffect(() => {
+    const updateLoginStatus = () => {
+      const token = localStorage.getItem("token");
+      setIsLoggedIn(!!token);
+    };
+
+    window.addEventListener("tokenChanged", updateLoginStatus);
+    return () => {
+      window.removeEventListener("tokenChanged", updateLoginStatus);
+    };
+  }, []);
+
+  // Settings logic: if logged in, do not show "Login"; if not, do not show "Logout"
+  const loggedOutSettings = [{ name: "Login", path: "/login" }];
+  const loggedInSettings = [
+    { name: "Conta", path: "/account" },
+    { name: "Logout", path: "/logout" },
+  ];
+  const settings = isLoggedIn ? loggedInSettings : loggedOutSettings;
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -51,7 +76,16 @@ function NavBar() {
   const handleCloseUserMenu = (path?: string) => {
     setAnchorElUser(null);
     if (path) {
-      router.push(path);
+      if (path === "/logout") {
+        // Perform logout action
+        localStorage.removeItem("token");
+        // Dispatch custom event to notify other components
+        window.dispatchEvent(new Event("tokenChanged"));
+        setIsLoggedIn(false);
+        router.push("/login");
+      } else {
+        router.push(path);
+      }
     }
   };
 
