@@ -43,13 +43,13 @@ const Account = () => {
   }, [userId]);
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", flex: 1, my: 4 }}>
+    <Box sx={{ display: "flex", flexDirection: "column", flex: 1 }}>
       <Hero
         title="Conta"
         subtitle="Gerencie suas informações e preferências"
         backgroundImage="/images/account-hero-image.jpg"
       />
-      <Box sx={{ my: 4, display: "flex", justifyContent: "center", alignItems: "center", flex: 1 }}>
+      <Box sx={{ my: 4, mx: 2, display: "flex", justifyContent: "center", alignItems: "center", flex: 1 }}>
         <UserProfileCard user={user} loading={loading} refreshUser={refreshUser} />
       </Box>
     </Box>

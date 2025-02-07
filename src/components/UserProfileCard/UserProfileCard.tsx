@@ -11,7 +11,7 @@ interface UserProfileCardProps {
 
 const UserProfileCard: React.FC<UserProfileCardProps> = ({ user, loading, refreshUser }) => {
   return (
-    <Paper elevation={3} sx={{ p: 4, width: "100%", maxWidth: 600 }}>
+    <Paper elevation={3} sx={{ p: 2, width: "100%", maxWidth: 600 }}>
       <Typography variant="h4" component="h1" gutterBottom>
         Informações da Conta
       </Typography>
