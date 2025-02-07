@@ -7,16 +7,21 @@ import { Content } from "@prisma/client";
 import { generatePdfFromElement } from "@/utils/generatePdf";
 import createPptFromContent from "@/utils/generatePpt";
 import SchoolIcon from "@mui/icons-material/School";
+import Link from "next/link";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 
 interface ContentCardProps {
-  content: Content;
+  content: Content & { author?: { name: string } };
 }
 
 const ContentCard: React.FC<ContentCardProps> = ({ content }) => {
   const markdownRef = useRef<HTMLDivElement>(null);
 
+  const slug = content.id
+
   const handleDownload = async () => {
-    if (content.type != "apresentação" && markdownRef.current) {
+    if (content.type !== "apresentação" && markdownRef.current) {
       await generatePdfFromElement(markdownRef.current, content.title);
     } else {
       createPptFromContent(content.generatedContent, content.title);
@@ -34,24 +39,45 @@ const ContentCard: React.FC<ContentCardProps> = ({ content }) => {
       <Typography variant="caption" color="textSecondary">
         {new Date(content.creationDate).toLocaleDateString("pt-BR")}
       </Typography>
-
-      <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <Box sx={{ mt: 2 }}>
+      <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap" }}>
+        <Box>
           <Typography variant="body2" color="textSecondary">
             <strong>Disciplina:</strong> {content.subject}
           </Typography>
-          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 1, flexWrap: "wrap" }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 1,
+              flexWrap: "wrap",
+              marginTop: 1,
+            }}>
             <Typography variant="body2" color="textSecondary">
               <strong>Tags:</strong>
             </Typography>
             {content.tags.split(",").map((tag) => (
-              <Chip key={tag} label={tag.trim()} sx={{ mr: 1, mt: 1 }} />
+              <Chip key={tag} label={tag.trim()} />
             ))}
           </Box>
         </Box>
-        <Button variant="contained" color="primary">
-          Ver Mais
-        </Button>
+        <Link href={`/content/${slug}`} passHref legacyBehavior>
+          <Button variant="contained" color="primary">
+            Ver Mais
+          </Button>
+        </Link>
+      </Box>
+      {/* New info: upvotes, downvotes and author */}
+      <Box sx={{ mt: 2, display: "flex", alignItems: "center", gap: 2 }}>
+        <Typography variant="body2" color="textSecondary">
+          <ThumbUpIcon sx={{ fontSize: 16, mr: 0.5 }} /> {content.upvotes}
+        </Typography>
+        <Typography variant="body2" color="textSecondary">
+          <ThumbDownIcon sx={{ fontSize: 16, mr: 0.5 }} /> {content.downvotes}
+        </Typography>
+        <Typography variant="body2" color="textSecondary">
+          <strong>Autor:</strong> {content.author?.name || "Desconhecido"}
+        </Typography>
       </Box>
       <Accordion sx={{ mt: 2 }}>
         <AccordionSummary
@@ -91,7 +117,7 @@ const ContentCard: React.FC<ContentCardProps> = ({ content }) => {
               .PPT
             </Button>
           )}
-          {content.type != "apresentação" && (
+          {content.type !== "apresentação" && (
             <Button variant="contained" color="primary" startIcon={<DownloadIcon />} onClick={handleDownload}>
               .PDF
             </Button>
