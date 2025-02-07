@@ -2,15 +2,20 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Content } from "@prisma/client";
+import { Content, Vote } from "@prisma/client";
 import ContentCard from "@/components/ContentCard/ContentCard";
 import { Alert, Box, Button, Skeleton } from "@mui/material";
 import { getContentById } from "@/services/getContentById";
 
+interface ContentWithVotes extends Content {
+  votes: Vote[];
+  author?: { name: string };
+}
+
 const ContentPage = () => {
   const params = useParams<{ id: string }>();
   const contentId = params?.id;
-  const [content, setContent] = useState<Content | null>(null);
+  const [content, setContent] = useState<ContentWithVotes | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
@@ -18,7 +23,7 @@ const ContentPage = () => {
     async function fetchData() {
       if (!contentId) return;
       try {
-        const response: Content = await getContentById(contentId);
+        const response: ContentWithVotes = await getContentById(contentId);
         setContent(response);
         setIsLoading(false);
       } catch (error) {

@@ -47,8 +47,6 @@ model Content {
   authorId        String
   generatedContent String
   status          String
-  upvotes         Int           @default(0)
-  downvotes       Int           @default(0)
   tags            String
   visibility      String
   subject         SchoolSubject 
@@ -75,4 +73,6 @@ model Vote {
   voteDate  DateTime @default(now())
   content   Content  @relation(fields: [contentId], references: [id])
   user      User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, contentId])
 }

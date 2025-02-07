@@ -1,23 +1,65 @@
-import React, { useRef } from "react";
-import { Box, Typography, Paper, Button, Accordion, AccordionSummary, AccordionDetails, Chip } from "@mui/material";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import {
+  Box,
+  Typography,
+  Paper,
+  Button,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Chip,
+  Snackbar,
+  Alert,
+  CircularProgress,
+} from "@mui/material";
 import DownloadIcon from "@mui/icons-material/Download";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ReactMarkdown from "react-markdown";
-import { Content } from "@prisma/client";
+import { Content, Vote } from "@prisma/client";
 import { generatePdfFromElement } from "@/utils/generatePdf";
 import createPptFromContent from "@/utils/generatePpt";
 import SchoolIcon from "@mui/icons-material/School";
 import Link from "next/link";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
+import { postVote } from "@/services/postVote";
+import { AuthContext } from "@/context/AuthContext";
+import { getContentById } from "@/services/getContentById";
+
+interface ContentWithVotes extends Content {
+  votes: Vote[];
+  author?: { name: string };
+}
 
 interface ContentCardProps {
-  content: Content & { author?: { name: string } };
+  content: ContentWithVotes;
   isPreview?: boolean;
 }
 
-const ContentCard: React.FC<ContentCardProps> = ({ content, isPreview = true }) => {
+const ContentCard: React.FC<ContentCardProps> = ({ content: initialContent, isPreview = true }) => {
+  const { isLoggedIn, userId } = useContext(AuthContext);
+  const [content, setContent] = useState<ContentWithVotes>(initialContent);
+
   const markdownRef = useRef<HTMLDivElement>(null);
+  const [voteCounts, setVoteCounts] = useState({ upvotes: 0, downvotes: 0 });
+  const [userVote, setUserVote] = useState<"up" | "down" | null>(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [loadingVote, setLoadingVote] = useState(false);
+
+  useEffect(() => {
+    const counts = content.votes.reduce(
+      (acc, vote) => {
+        if (vote.type === "up") acc.upvotes += 1;
+        if (vote.type === "down") acc.downvotes += 1;
+        return acc;
+      },
+      { upvotes: 0, downvotes: 0 }
+    );
+    setVoteCounts(counts);
+
+    const userVote = content.votes.find((vote) => vote.userId === userId);
+    setUserVote(userVote ? (userVote.type as "up" | "down") : null);
+  }, [content.votes, userId, content]);
 
   const slug = content.id;
 
@@ -29,6 +71,29 @@ const ContentCard: React.FC<ContentCardProps> = ({ content, isPreview = true }) 
     }
   };
 
+  const handleVote = async (voteType: "up" | "down") => {
+    if (!isLoggedIn) {
+      setSnackbarOpen(true);
+      return;
+    }
+
+    setLoadingVote(true);
+
+    try {
+      await postVote({ contentId: content.id, voteType });
+      const updatedContent = await getContentById(content.id);
+      setContent(updatedContent);
+    } catch (error) {
+      console.error(`Error voting ${voteType}`, error);
+    } finally {
+      setLoadingVote(false);
+    }
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
   return (
     <Paper elevation={3} sx={{ p: 2, mb: 2 }}>
       <Typography variant="h5" component="h2" gutterBottom>
@@ -37,12 +102,13 @@ const ContentCard: React.FC<ContentCardProps> = ({ content, isPreview = true }) 
       <Typography variant="body2" color="textSecondary" gutterBottom>
         {content.description}
       </Typography>
-      <Typography variant="caption" color="textSecondary">
-        {new Date(content.creationDate).toLocaleDateString("pt-BR")}
-      </Typography>
-      <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap" }}>
-        <Box>
-          <Typography variant="body2" color="textSecondary">
+
+      <Box sx={{ mt: 1, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap" }}>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+          <Typography variant="caption" color="textSecondary">
+            <strong>Criado em:</strong> {new Date(content.creationDate).toLocaleDateString("pt-BR")}
+          </Typography>
+          <Typography variant="caption" color="textSecondary">
             <strong>Disciplina:</strong> {content.subject}
           </Typography>
           <Box
@@ -52,9 +118,8 @@ const ContentCard: React.FC<ContentCardProps> = ({ content, isPreview = true }) 
               justifyContent: "center",
               gap: 1,
               flexWrap: "wrap",
-              marginTop: 1,
             }}>
-            <Typography variant="body2" color="textSecondary">
+            <Typography variant="caption" color="textSecondary">
               <strong>Tags:</strong>
             </Typography>
             {content.tags.split(",").map((tag) => (
@@ -73,10 +138,42 @@ const ContentCard: React.FC<ContentCardProps> = ({ content, isPreview = true }) 
       {/* New info: upvotes, downvotes and author */}
       <Box sx={{ mt: 2, display: "flex", alignItems: "center", gap: 2 }}>
         <Typography variant="body2" color="textSecondary">
-          <ThumbUpIcon sx={{ fontSize: 16, mr: 0.5 }} /> {content.upvotes}
+          {loadingVote ? (
+            <CircularProgress size={16} />
+          ) : (
+            <ThumbUpIcon
+              sx={{
+                fontSize: 16,
+                mr: 0.5,
+                cursor: "pointer",
+                color: userVote === "up" ? "green" : "inherit",
+                "&:hover": {
+                  color: "green",
+                },
+              }}
+              onClick={() => handleVote("up")}
+            />
+          )}{" "}
+          {!loadingVote && voteCounts.upvotes}
         </Typography>
         <Typography variant="body2" color="textSecondary">
-          <ThumbDownIcon sx={{ fontSize: 16, mr: 0.5 }} /> {content.downvotes}
+          {loadingVote ? (
+            <CircularProgress size={16} />
+          ) : (
+            <ThumbDownIcon
+              sx={{
+                fontSize: 16,
+                mr: 0.5,
+                cursor: "pointer",
+                color: userVote === "down" ? "red" : "inherit",
+                "&:hover": {
+                  color: "red",
+                },
+              }}
+              onClick={() => handleVote("down")}
+            />
+          )}{" "}
+          {!loadingVote && voteCounts.downvotes}
         </Typography>
         <Typography variant="body2" color="textSecondary">
           <strong>Autor:</strong> {content.author?.name || "Desconhecido"}
@@ -127,6 +224,15 @@ const ContentCard: React.FC<ContentCardProps> = ({ content, isPreview = true }) 
           )}
         </AccordionDetails>
       </Accordion>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}>
+        <Alert onClose={handleSnackbarClose} severity="warning" sx={{ width: "100%" }}>
+          Você precisa estar logado para votar.
+        </Alert>
+      </Snackbar>
       {/* <pre>{JSON.stringify(content, null, 2)}</pre> */}
     </Paper>
   );
