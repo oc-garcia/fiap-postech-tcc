@@ -1,4 +1,4 @@
-# EducaPro - Plataforma Educacional Inovadora
+# EducaPro - Plataforma Educacional
 
 ## 📌 Resumo Executivo
 
