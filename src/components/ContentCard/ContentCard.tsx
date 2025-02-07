@@ -100,11 +100,11 @@ const ContentCard: React.FC<ContentCardProps> = ({ content: initialContent, isPr
   };
 
   return (
-    <Paper elevation={3} sx={{ p: 2, mb: 2 }}>
+    <Paper elevation={3} sx={{ p: 2, mb: 2, overflowX: "hidden" }}>
       <Typography variant="h5" component="h2" gutterBottom>
         {content.title}
       </Typography>
-      <Typography variant="body2" color="textSecondary" gutterBottom>
+      <Typography variant="body2" color="textSecondary" gutterBottom sx={{ maxWidth: "100%" }}>
         {content.description}
       </Typography>
 

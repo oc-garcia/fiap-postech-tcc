@@ -16,23 +16,23 @@ const Explore = () => {
   const [contents, setContents] = useState<ContentWithVotes[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchContents = async () => {
-      try {
-        const response = await getContent();
-        setContents(response);
-      } catch (error) {
-        console.error("Erro ao buscar conteúdos:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchContents = async () => {
+    try {
+      const response = await getContent();
+      setContents(response);
+    } catch (error) {
+      console.error("Erro ao buscar conteúdos:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchContents();
   }, []);
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh", overflowX: "hidden" }}>
       <Hero
         title="Explore"
         subtitle="Mergulhe em conteúdos educativos incríveis escolhidos pela comunidade"
@@ -53,7 +53,7 @@ const Explore = () => {
             Nenhum conteúdo encontrado.
           </Typography>
         ) : (
-          contents.map((content) => <ContentCard key={content.id} content={content} />)
+          contents.map((content) => <ContentCard key={content.id} content={content} onVoteSuccess={fetchContents} />)
         )}
       </Container>
     </Box>

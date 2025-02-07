@@ -1,7 +1,18 @@
 "use client";
 
 import React, { useContext, useState } from "react";
-import { Box, Container, TextField, Button, Typography, Paper, Link, Snackbar, Alert } from "@mui/material";
+import {
+  Box,
+  Container,
+  TextField,
+  Button,
+  Typography,
+  Paper,
+  Link,
+  Snackbar,
+  Alert,
+  CircularProgress,
+} from "@mui/material";
 import { useFormik } from "formik";
 import * as z from "zod";
 import { toFormikValidationSchema } from "zod-formik-adapter";
@@ -91,8 +102,15 @@ const Login = () => {
               variant="outlined"
               required
             />
-            <Button variant="contained" color="primary" type="submit" fullWidth sx={{ mt: 2 }}>
-              Entrar
+            <Button
+              disabled={formik.isSubmitting}
+              startIcon={formik.isSubmitting ? <CircularProgress size="1rem" /> : null}
+              variant="contained"
+              color="primary"
+              type="submit"
+              fullWidth
+              sx={{ mt: 2 }}>
+              {formik.isSubmitting ? "Carregando..." : "Entrar"}
             </Button>
           </form>
           <Box sx={{ mt: 2, textAlign: "center" }}>

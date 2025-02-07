@@ -43,6 +43,7 @@ const ContentPage = () => {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
+          overflowX: "hidden",
           gap: 2,
           flex: 1,
         }}>
@@ -70,7 +71,7 @@ const ContentPage = () => {
     );
 
   return (
-    <Box sx={{ p: 2, display: "flex", justifyContent: "center", alignItems: "center", flex: 1 }}>
+    <Box sx={{ my: 4, mx: 2, display: "flex", flexDirection: "column", flex: 1, overflowX: "hidden" }}>
       <ContentCard content={content} isPreview={false} />
     </Box>
   );

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useContext, useEffect, useState } from "react";
-import { Box, Container } from "@mui/material";
+import { Box } from "@mui/material";
 import Hero from "@/components/Hero/Hero";
 import { getUserWithDetails, UserWithDetails } from "@/services/getUserWithDetails";
 import { AuthContext } from "@/context/AuthContext";
@@ -43,23 +43,15 @@ const Account = () => {
   }, [userId]);
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", flex: 1 }}>
+    <Box sx={{ display: "flex", flexDirection: "column", flex: 1, my: 4 }}>
       <Hero
         title="Conta"
         subtitle="Gerencie suas informações e preferências"
         backgroundImage="/images/account-hero-image.jpg"
       />
-      <Container
-        sx={{
-          my: 4,
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-        }}>
+      <Box sx={{ my: 4, display: "flex", justifyContent: "center", alignItems: "center", flex: 1 }}>
         <UserProfileCard user={user} loading={loading} refreshUser={refreshUser} />
-      </Container>
+      </Box>
     </Box>
   );
 };
