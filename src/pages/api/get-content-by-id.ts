@@ -18,7 +18,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             name: true,
           },
         },
-        comments: true,
+        comments: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
         votes: true,
       },
     });

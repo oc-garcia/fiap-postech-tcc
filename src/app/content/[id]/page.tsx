@@ -72,7 +72,7 @@ const ContentPage = () => {
 
   return (
     <Box sx={{ my: 4, mx: 2, display: "flex", flexDirection: "column", flex: 1, overflowX: "hidden" }}>
-      <ContentCard content={content} isPreview={false} />
+      <ContentCard content={content} isPreview={false} displayComments={true} />
     </Box>
   );
 };

@@ -15,7 +15,7 @@ import {
 import DownloadIcon from "@mui/icons-material/Download";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ReactMarkdown from "react-markdown";
-import { Content, Vote } from "@prisma/client";
+import { Comment, Content, Vote } from "@prisma/client";
 import { generatePdfFromElement } from "@/utils/generatePdf";
 import createPptFromContent from "@/utils/generatePpt";
 import SchoolIcon from "@mui/icons-material/School";
@@ -25,19 +25,27 @@ import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import { postVote } from "@/services/postVote";
 import { AuthContext } from "@/context/AuthContext";
 import { getContentById } from "@/services/getContentById";
+import CommentSection from "./CommentSection/CommentSection";
 
 interface ContentWithVotes extends Content {
   votes: Vote[];
   author?: { name: string };
+  comments?: Comment[];
 }
 
 interface ContentCardProps {
   content: ContentWithVotes;
   isPreview?: boolean;
+  displayComments?: boolean;
   onVoteSuccess?: (updatedContent: ContentWithVotes) => void;
 }
 
-const ContentCard: React.FC<ContentCardProps> = ({ content: initialContent, isPreview = true, onVoteSuccess }) => {
+const ContentCard: React.FC<ContentCardProps> = ({
+  content: initialContent,
+  isPreview = true,
+  onVoteSuccess,
+  displayComments = false,
+}) => {
   const { isLoggedIn, userId } = useContext(AuthContext);
   const [content, setContent] = useState<ContentWithVotes>(initialContent);
 
@@ -72,7 +80,6 @@ const ContentCard: React.FC<ContentCardProps> = ({ content: initialContent, isPr
     }
   };
 
-  // trecho de ContentCard.tsx (dentro da função handleVote)
   const handleVote = async (voteType: "up" | "down") => {
     if (!isLoggedIn) {
       setSnackbarOpen(true);
@@ -229,6 +236,18 @@ const ContentCard: React.FC<ContentCardProps> = ({ content: initialContent, isPr
           )}
         </AccordionDetails>
       </Accordion>
+      {displayComments && (
+        <Accordion>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon sx={{ color: "white" }} />}
+            sx={{ backgroundColor: "primary.main", color: "white" }}>
+            <Typography variant="h6">Comentários</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <CommentSection comments={content.comments || []} contentId={content.id} />
+          </AccordionDetails>
+        </Accordion>
+      )}
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={6000}
@@ -238,7 +257,7 @@ const ContentCard: React.FC<ContentCardProps> = ({ content: initialContent, isPr
           Você precisa estar logado para votar.
         </Alert>
       </Snackbar>
-      {/* <pre>{JSON.stringify(content, null, 2)}</pre> */}
+      <pre>{JSON.stringify(content, null, 2)}</pre>
     </Paper>
   );
 };

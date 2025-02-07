@@ -17,7 +17,7 @@ import { AlertColor, CircularProgress } from "@mui/material";
 
 const contentSchema = z.object({
   title: z.string().min(3, "O título deve ter pelo menos 3 caracteres"),
-  description: z.string().min(200, "A descrição deve ter pelo menos 200 caracteres"),
+  description: z.string().min(50, "A descrição deve ter pelo menos 50 caracteres"),
   type: z.enum(["atividade", "prova", "apresentação", "outro"]),
   subject: z.nativeEnum(SchoolSubject),
   tags: z.array(z.string()).min(1, "Selecione pelo menos uma tag"),
