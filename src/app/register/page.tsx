@@ -26,8 +26,9 @@ const Register = () => {
       password: '',
       confirmPassword: '',
     },
+    enableReinitialize: true,
     validationSchema: toFormikValidationSchema(registerSchema),
-    onSubmit: async (values) => {
+    onSubmit: async (values, { setValues,resetForm }) => {
       setMessage("");
       try {
         const response = await fetch("/api/create-user", {
@@ -38,16 +39,27 @@ const Register = () => {
             email: values.email,
             password: values.password,
             role: "user",
-            contentPreferences: "",
+            contentPreferences: null,
           }),
         });
-        
+
         const data = await response.json();
         if (response.ok) {
           setMessage("Usuário criado com sucesso!");
+
+          setValues({
+            name: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+          });
+
+          resetForm()
+          
         } else {
           setMessage(data.message || "Erro ao criar usuário.");
         }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         setMessage("Erro ao conectar com o servidor.");
       }

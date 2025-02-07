@@ -53,8 +53,17 @@ const mockUser: UserWithContents = {
 const Account = () => {
   const [user, setUser] = useState<UserWithContents | null>(null);
   const [loading, setLoading] = useState(true);
+  const [userteste, setUserteste] = useState({id: "", name: "", role:"", email:"", contentPreferences: ""});
 
   useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setUserteste(parsedUser);
+      console.log(parsedUser.name); // ✅ Agora pega o nome corretamente
+    }
+
     // Simula um atraso para exibir o skeleton
     setTimeout(() => {
       setUser(mockUser);
@@ -100,19 +109,16 @@ const Account = () => {
           ) : user ? (
             <List>
               <ListItem>
-                <ListItemText primary="Nome" secondary={user.name} />
+                <ListItemText primary="Nome" secondary={userteste.name} />
               </ListItem>
               <ListItem>
-                <ListItemText primary="E-mail" secondary={user.email} />
+                <ListItemText primary="E-mail" secondary={userteste.email} />
               </ListItem>
               <ListItem>
                 <ListItemText
                   primary="Preferências de Conteúdo"
-                  secondary={user.contentPreferences || "Nenhuma preferência definida"}
+                  secondary={userteste.contentPreferences || "Nenhuma preferência definida"}
                 />
-              </ListItem>
-              <ListItem>
-                <ListItemText primary="Conteúdos Criados" secondary={user.createdContents.length} />
               </ListItem>
             </List>
           ) : (
@@ -125,9 +131,6 @@ const Account = () => {
               </ListItem>
               <ListItem>
                 <ListItemText primary="Preferências de Conteúdo" secondary={<Skeleton width="50%" />} />
-              </ListItem>
-              <ListItem>
-                <ListItemText primary="Conteúdos Criados" secondary={<Skeleton width="30%" />} />
               </ListItem>
             </List>
           )}
