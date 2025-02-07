@@ -223,6 +223,13 @@ const ContentCard: React.FC<ContentCardProps> = ({
               </Typography>
             </Box>
             <ReactMarkdown>{content.generatedContent}</ReactMarkdown>
+            <Box sx={{ mt: 2, p: 2, borderTop: "1px solid #ccc" }}>
+              <Typography variant="caption" color="textSecondary" sx={{ fontSize: "0.5rem" }}>
+                Nota: Este conteúdo foi gerado por IA e deve ser verificado pelo docente. É possível que obras de
+                terceiros protegidas por direitos autorais sejam mencionadas. No entanto, a utilização deste conteúdo é
+                permitida pela lei de direitos autorais, que autoriza o uso de pequenos trechos para fins educacionais.
+              </Typography>
+            </Box>
           </div>
           {content.type === "apresentação" && (
             <Button variant="contained" color="primary" startIcon={<DownloadIcon />} onClick={handleDownload}>

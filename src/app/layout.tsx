@@ -15,8 +15,9 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: "EducaPro",
-  description: "EducaPro",
+  title: "EducaPro - Plataforma Educacional Inovadora",
+  description:
+    "Bem-vindo ao EducaPro, a plataforma que transforma a forma de aprender com conteúdos educativos inovadores e colaborativos, impulsionando seu conhecimento e sucesso acadêmico.",
 };
 
 export default function RootLayout({
