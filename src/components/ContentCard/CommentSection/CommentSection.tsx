@@ -19,9 +19,10 @@ export interface Comment {
 interface CommentSectionProps {
   comments: Comment[];
   contentId: string;
+  onCommentAdded?: (newComment?: Comment) => void;
 }
 
-const CommentSection: React.FC<CommentSectionProps> = ({ comments, contentId }) => {
+const CommentSection: React.FC<CommentSectionProps> = ({ comments, contentId, onCommentAdded }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [snackbar, setSnackbar] = useState<{
     open: boolean;
@@ -33,6 +34,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ comments, contentId }) 
     severity: "warning",
   });
   const { isLoggedIn, userId } = useContext(AuthContext);
+  const [localUserId] = useState<string | null>(userId);
 
   const handleOpenDrawer = () => {
     if (!isLoggedIn) {
@@ -51,23 +53,46 @@ const CommentSection: React.FC<CommentSectionProps> = ({ comments, contentId }) 
   };
 
   const handleNewCommentSubmit = async (commentText: string) => {
-    if (!userId) {
-      console.error("User is not logged in.");
+    if (!localUserId) {
+      console.error("Usuário não identificado.");
+      setSnackbar({
+        open: true,
+        message: "Usuário não identificado. Por favor, faça login.",
+        severity: "error",
+      });
       return;
     }
+
     const payload = {
       contentId,
-      userId,
+      userId: localUserId,
       text: commentText,
     };
 
     try {
-      await postComment(payload);
-      setSnackbar({ open: true, message: "Comentário postado com sucesso.", severity: "success" });
+      // Supondo que postComment retorne o novo comentário criado.
+      const newComment: Comment = await postComment(payload);
+      setSnackbar({
+        open: true,
+        message: "Comentário postado com sucesso.",
+        severity: "success",
+      });
+
+      // Chama o callback para atualizar o componente pai.
+      if (onCommentAdded) {
+        onCommentAdded(newComment);
+      }
+      // Opcional: fecha o drawer após postar o comentário.
+      handleCloseDrawer();
     } catch (error) {
-      console.error("Error posting comment:", error);
-      setSnackbar({ open: true, message: "Erro ao postar comentário.", severity: "error" });
+      console.error("Erro ao postar comentário:", error);
+      setSnackbar({
+        open: true,
+        message: "Erro ao postar comentário.",
+        severity: "error",
+      });
     }
+
     console.log("Novo comentário:", commentText);
   };
 

@@ -24,7 +24,7 @@ const pages = [
 ];
 
 function NavBar() {
-  const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn, setIsLoggedIn, setUserId } = useContext(AuthContext);
 
   const theme = useTheme();
   const router = useRouter();
@@ -82,6 +82,7 @@ function NavBar() {
         // Dispatch custom event to notify other components
         window.dispatchEvent(new Event("tokenChanged"));
         setIsLoggedIn(false);
+        setUserId(null);
         router.push("/login");
       } else {
         router.push(path);

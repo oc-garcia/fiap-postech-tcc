@@ -251,7 +251,14 @@ const ContentCard: React.FC<ContentCardProps> = ({
             <Typography variant="h6">Comentários</Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <CommentSection comments={content.comments || []} contentId={content.id} />
+            <CommentSection
+              comments={content.comments || []}
+              contentId={content.id}
+              onCommentAdded={async () => {
+                const updatedContent = await getContentById(content.id);
+                setContent(updatedContent);
+              }}
+            />
           </AccordionDetails>
         </Accordion>
       )}

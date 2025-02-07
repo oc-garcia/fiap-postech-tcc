@@ -6,12 +6,14 @@ interface AuthContextProps {
   isLoggedIn: boolean;
   setIsLoggedIn: (status: boolean) => void;
   userId: string | null;
+  setUserId: (id: string | null) => void;
 }
 
 export const AuthContext = createContext<AuthContextProps>({
   isLoggedIn: false,
   setIsLoggedIn: () => {},
   userId: null,
+  setUserId: () => {},
 });
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -39,5 +41,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
-  return <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, userId }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, userId, setUserId }}>{children}</AuthContext.Provider>
+  );
 };
