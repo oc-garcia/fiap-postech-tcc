@@ -35,7 +35,10 @@ const ContentFilter: React.FC<ContentFilterProps> = ({ filterValues, onFilterCha
   });
 
   return (
-    <Box component="form" onSubmit={formik.handleSubmit} sx={{ display: "flex", gap: 2, alignItems: "center", mb: 2 }}>
+    <Box
+      component="form"
+      onSubmit={formik.handleSubmit}
+      sx={{ display: "flex", gap: 2, alignItems: "center", mb: 2, flexWrap: "wrap" }}>
       <TextField
         label="Pesquisar"
         name="search"

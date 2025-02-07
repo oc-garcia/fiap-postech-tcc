@@ -132,11 +132,13 @@ const Explore = () => {
         <Typography variant="h4" component="h1" gutterBottom>
           Conteúdos
         </Typography>
-        <ContentFilter
-          filterValues={filterValues}
-          onFilterChange={handleFilterChange}
-          onResetFilter={handleResetFilter}
-        />
+        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
+          <ContentFilter
+            filterValues={filterValues}
+            onFilterChange={handleFilterChange}
+            onResetFilter={handleResetFilter}
+          />
+        </Box>
         {loading ? (
           <>
             <Skeleton variant="rectangular" width="100%" height={118} sx={{ mb: 2 }} />
