@@ -3,12 +3,17 @@
 import React, { useEffect, useState } from "react";
 import { Box, Container, Typography, Skeleton } from "@mui/material";
 import Hero from "@/components/Hero/Hero";
-import { Content } from "@prisma/client";
+import { Content, Vote } from "@prisma/client";
 import ContentCard from "@/components/ContentCard/ContentCard";
 import { getContent } from "@/services/getContent";
 
+export interface ContentWithVotes extends Content {
+  votes: Vote[];
+  author?: { name: string };
+}
+
 const Explore = () => {
-  const [contents, setContents] = useState<Content[]>([]);
+  const [contents, setContents] = useState<ContentWithVotes[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

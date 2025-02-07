@@ -1,7 +1,12 @@
 import axios from "axios";
-import { Content } from "@prisma/client";
+import { Content, Vote } from "@prisma/client";
 
-export const getContent = async (): Promise<Content[]> => {
+export interface ContentWithVotes extends Content {
+  votes: Vote[];
+  author?: { name: string };
+}
+
+export const getContent = async (): Promise<ContentWithVotes[]> => {
   try {
     const response = await axios.get("/api/get-content");
     return response.data;
