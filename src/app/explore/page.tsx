@@ -26,7 +26,7 @@ const Explore = () => {
   const [snackbar, setSnackbar] = useState<{
     open: boolean;
     message: string;
-    severity: "success" | "warning" | "error";
+    severity: "success" | "warning" | "error" | "info";
   }>({
     open: false,
     message: "",
@@ -46,24 +46,18 @@ const Explore = () => {
             console.error("Erro ao buscar usuário:", userResponse.message);
             setSnackbar({
               open: true,
-              message: "Erro ao recuperar usuário. Faça login novamente.",
-              severity: "error",
+              message: "Faça Login para aproveitar todos os recursos.",
+              severity: "info",
             });
             return;
           }
-          console.log("Usuário recuperado:", userResponse.userId);
-          setSnackbar({
-            open: true,
-            message: "Usuário recuperado com sucesso.",
-            severity: "success",
-          });
           setUserId(userResponse.userId);
         } catch (error) {
           console.error("Erro ao buscar usuário:", error);
           setSnackbar({
             open: true,
-            message: "Erro ao recuperar usuário. Faça login novamente.",
-            severity: "error",
+            message: "Faça Login para aproveitar todos os recursos.",
+            severity: "info",
           });
         }
       }
