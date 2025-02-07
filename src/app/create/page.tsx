@@ -20,6 +20,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CloseIcon from "@mui/icons-material/Close";
 import React, { useContext, useState } from "react";
 import { AuthContext } from "@/context/AuthContext";
+import Image from "next/image";
 
 const Create = () => {
   const { isLoggedIn } = useContext(AuthContext);
@@ -77,9 +78,13 @@ const Create = () => {
           alignItems: "center",
           justifyContent: "center",
         }}>
-        <Button variant="contained" color="primary" onClick={handleOpenForm}>
-          Abrir Formulário de Criação
-        </Button>
+        <Box sx={{ mt: 2, display: "flex", alignItems: "center", justifyContent: "center", gap: 1 }}>
+          <Button variant="contained" color="primary" onClick={handleOpenForm} sx={{ mr: 4 }}>
+            Abrir Formulário de Criação
+          </Button>
+          <Image src="/svg/openAi.svg" alt="OpenAI Logo" width={20} height={20} />
+          <Typography variant="caption">Powered by OpenAI</Typography>
+        </Box>
         <Drawer
           anchor="right"
           open={drawerOpen}

@@ -6,6 +6,7 @@ import ReactMarkdown from "react-markdown";
 import { Content } from "@prisma/client";
 import { generatePdfFromElement } from "@/utils/generatePdf";
 import createPptFromContent from "@/utils/generatePpt";
+import SchoolIcon from "@mui/icons-material/School";
 
 interface ContentCardProps {
   content: Content;
@@ -67,6 +68,22 @@ const ContentCard: React.FC<ContentCardProps> = ({ content }) => {
               color: "#000",
               borderRadius: "4px",
             }}>
+            <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", mb: 2 }}>
+              <SchoolIcon sx={{ color: "inherit", mr: 1 }} />
+              <Typography
+                variant="h6"
+                noWrap
+                component="a"
+                sx={{
+                  fontFamily: "monospace",
+                  fontWeight: 700,
+                  letterSpacing: ".3rem",
+                  color: "inherit",
+                  textDecoration: "none",
+                }}>
+                EducaPro
+              </Typography>
+            </Box>
             <ReactMarkdown>{content.generatedContent}</ReactMarkdown>
           </div>
           {content.type === "apresentação" && (

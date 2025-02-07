@@ -1,5 +1,5 @@
 "use client";
-import * as React from "react";
+import { useContext, useState, useEffect } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -24,22 +24,22 @@ const pages = [
 ];
 
 function NavBar() {
-  const { isLoggedIn, setIsLoggedIn } = React.useContext(AuthContext);
+  const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
 
   const theme = useTheme();
   const router = useRouter();
 
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
+  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
   // Initially set the login status
-  React.useEffect(() => {
+  useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
-  }, []);
+  }, [setIsLoggedIn]);
 
   // Listen for custom token change events
-  React.useEffect(() => {
+  useEffect(() => {
     const updateLoginStatus = () => {
       const token = localStorage.getItem("token");
       setIsLoggedIn(!!token);
@@ -49,7 +49,7 @@ function NavBar() {
     return () => {
       window.removeEventListener("tokenChanged", updateLoginStatus);
     };
-  }, []);
+  }, [setIsLoggedIn]);
 
   // Settings logic: if logged in, do not show "Login"; if not, do not show "Logout"
   const loggedOutSettings = [{ name: "Login", path: "/login" }];
@@ -110,7 +110,6 @@ function NavBar() {
             }}>
             EducaPro
           </Typography>
-
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
