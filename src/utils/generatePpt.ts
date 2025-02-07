@@ -1,22 +1,64 @@
 import PptxGenJS from "pptxgenjs";
 
-/**
- * Função que converte um conteúdo estruturado em slides (por exemplo, separado por um delimitador)
- * em uma apresentação PPTX.
- */
 const createPptFromContent = (generatedContent: string, fileName: string) => {
   const pptx = new PptxGenJS();
-
-  // Exemplo: supondo que o conteúdo gerado tenha um separador '---' para indicar a quebra de slides.
   const slidesContent = generatedContent.split("---");
 
-  slidesContent.forEach((slideText) => {
-    // Cria um novo slide para cada parte
+  slidesContent.forEach((slideMarkdown) => {
     const slide = pptx.addSlide();
-    slide.addText(slideText.trim(), { x: 0.5, y: 0.5, fontSize: 18 });
+    const cleanSlide = slideMarkdown.trim();
+    if (!cleanSlide) return;
+
+    const lines = cleanSlide
+      .split("\n")
+      .map((line) => line.trim())
+      .filter(Boolean);
+
+    let title = "";
+    let content = cleanSlide;
+
+    if (lines[0].startsWith("#")) {
+      title = lines[0].replace(/^#+\s*/, "");
+      content = lines.slice(1).join("\n");
+    }
+
+    const marginX = 0.5;
+    const marginY = 0.5;
+    const slideWidth = 10;
+
+    if (title) {
+      slide.addText(title, {
+        x: marginX,
+        y: marginY,
+        w: slideWidth - marginX * 2,
+        fontSize: 28,
+        bold: true,
+        color: "363636",
+      });
+      slide.addText(content, {
+        x: marginX,
+        y: marginY + 1.5,
+        w: slideWidth - marginX * 2,
+        fontSize: 18,
+        color: "363636",
+        autoFit: true,
+        margin: 0.1,
+        bullet: false,
+      });
+    } else {
+      slide.addText(content, {
+        x: marginX,
+        y: marginY,
+        w: slideWidth - marginX * 2,
+        fontSize: 18,
+        color: "363636",
+        autoFit: true,
+        margin: 0.1,
+        bullet: false,
+      });
+    }
   });
 
-  // Salva o arquivo PPTX localmente (ou você pode retornar o buffer para enviar como resposta)
   pptx.writeFile({ fileName: `${fileName}.pptx` });
 };
 

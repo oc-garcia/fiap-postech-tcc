@@ -1,10 +1,11 @@
 "use client";
 
-import React from "react";
-import { Box, Container, TextField, Button, Typography, Paper, Link } from "@mui/material";
+import React, { useState } from "react";
+import { Box, Container, TextField, Button, Typography, Paper, Link, Snackbar, Alert } from "@mui/material";
 import { useFormik } from "formik";
 import * as z from "zod";
 import { toFormikValidationSchema } from "zod-formik-adapter";
+import { loginUser } from "@/services/login";
 
 const loginSchema = z.object({
   email: z.string().email("E-mail inválido").nonempty("E-mail é obrigatório"),
@@ -12,27 +13,44 @@ const loginSchema = z.object({
 });
 
 const Login = () => {
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">("success");
+
+  const handleToastClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === "clickaway") return;
+    setSnackbarOpen(false);
+  };
+
+  const showToast = (message: string, severity: "success" | "error") => {
+    setSnackbarMessage(message);
+    setSnackbarSeverity(severity);
+    setSnackbarOpen(true);
+  };
+
   const formik = useFormik({
     initialValues: {
       email: "",
       password: "",
     },
     validationSchema: toFormikValidationSchema(loginSchema),
-    onSubmit: (values) => {
-      console.log("Valores do formulário", values);
-      // Adicione aqui a lógica de autenticação
+    onSubmit: async (values) => {
+      const data = await loginUser({
+        email: values.email,
+        password: values.password,
+      });
+      if (data.success && data.token) {
+        localStorage.setItem("token", data.token);
+        showToast("Login realizado com sucesso!", "success");
+        // Implement additional actions like redirection here...
+      } else {
+        showToast(data.message, "error");
+      }
     },
   });
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}>
+    <Box sx={{ display: "flex", flexDirection: "column", flex: 1, justifyContent: "center", alignItems: "center" }}>
       <Container maxWidth="sm">
         <Paper elevation={3} sx={{ p: 4 }}>
           <Typography variant="h4" component="h1" gutterBottom>
@@ -77,6 +95,11 @@ const Login = () => {
           </Box>
         </Paper>
       </Container>
+      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleToastClose}>
+        <Alert onClose={handleToastClose} severity={snackbarSeverity} sx={{ width: "100%" }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

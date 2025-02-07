@@ -35,6 +35,7 @@ model User {
   createdContents     Content[]
   comments            Comment[]
   votes               Vote[]
+  createdAt          DateTime  @default(now())
 }
 
 model Content {

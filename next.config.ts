@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
     ENVIRONMENT: process.env.ENVIRONMENT,
     DATABASE_URL: process.env.DATABASE_URL,
     DIRECT_URL: process.env.DIRECT_URL,
+    JWT_SECRET: process.env.JWT_SECRET,
   },
 };
 

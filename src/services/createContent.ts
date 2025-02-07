@@ -19,7 +19,7 @@ export const generateContentFromForm = async (formData: FormData) => {
 
     const generatedContent = response.data;
 
-    const data = { ...formData, ...generatedContent, visibility: "public", authorId: "1" };
+    const data = { ...formData, ...generatedContent, visibility: "public" };
 
     const saveResponse = await postContent(data);
 
