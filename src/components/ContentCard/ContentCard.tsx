@@ -13,12 +13,13 @@ import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 
 interface ContentCardProps {
   content: Content & { author?: { name: string } };
+  isPreview?: boolean;
 }
 
-const ContentCard: React.FC<ContentCardProps> = ({ content }) => {
+const ContentCard: React.FC<ContentCardProps> = ({ content, isPreview = true }) => {
   const markdownRef = useRef<HTMLDivElement>(null);
 
-  const slug = content.id
+  const slug = content.id;
 
   const handleDownload = async () => {
     if (content.type !== "apresentação" && markdownRef.current) {
@@ -61,11 +62,13 @@ const ContentCard: React.FC<ContentCardProps> = ({ content }) => {
             ))}
           </Box>
         </Box>
-        <Link href={`/content/${slug}`} passHref legacyBehavior>
-          <Button variant="contained" color="primary">
-            Ver Mais
-          </Button>
-        </Link>
+        {isPreview && (
+          <Link href={`/content/${slug}`} passHref legacyBehavior>
+            <Button variant="contained" color="primary">
+              Ver Mais
+            </Button>
+          </Link>
+        )}
       </Box>
       {/* New info: upvotes, downvotes and author */}
       <Box sx={{ mt: 2, display: "flex", alignItems: "center", gap: 2 }}>
