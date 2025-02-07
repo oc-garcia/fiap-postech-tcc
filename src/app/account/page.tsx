@@ -16,6 +16,7 @@ const mockUser: UserWithContents = {
   password: "mockpassword",
   role: "user",
   contentPreferences: "Matemática, Ciências",
+  createdAt: new Date(),
   createdContents: [
     {
       id: "1",
