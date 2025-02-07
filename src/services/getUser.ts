@@ -6,7 +6,7 @@ interface GetUserResponse {
   message?: string;
 }
 
-export async function getUser(token: string): Promise<GetUserResponse> {
+export const getUser = async (token: string): Promise<GetUserResponse> => {
   try {
     const response = await axios.get<GetUserResponse>("/api/get-user", {
       headers: {
@@ -18,4 +18,4 @@ export async function getUser(token: string): Promise<GetUserResponse> {
     console.error("Error fetching user:", error);
     throw error;
   }
-}
+};

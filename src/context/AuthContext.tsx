@@ -1,6 +1,6 @@
 "use client";
-import React, { createContext, useState, useEffect } from "react";
 import { getUser } from "@/services/getUser";
+import React, { createContext, useState, useEffect } from "react";
 
 interface AuthContextProps {
   isLoggedIn: boolean;
@@ -39,9 +39,5 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
-  return (
-    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, userId }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn, userId }}>{children}</AuthContext.Provider>;
 };

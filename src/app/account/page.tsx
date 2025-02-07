@@ -1,63 +1,46 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { Box, Container, Typography, Paper, List, ListItem, ListItemText, Skeleton } from "@mui/material";
+import React, { useContext, useEffect, useState } from "react";
+import { Box, Container } from "@mui/material";
 import Hero from "@/components/Hero/Hero";
-import { User, Content, SchoolSubject } from "@prisma/client"; // Importa os tipos diretamente do Prisma
-
-type UserWithContents = User & {
-  createdContents: Content[];
-};
-
-const mockUser: UserWithContents = {
-  id: "1",
-  name: "Usuário Mockado",
-  email: "usuario@mockado.com",
-  password: "mockpassword",
-  role: "user",
-  contentPreferences: "Matemática, Ciências",
-  createdAt: new Date(),
-  createdContents: [
-    {
-      id: "1",
-      title: "Conteúdo Mockado 1",
-      description: "Descrição do conteúdo mockado 1",
-      type: "atividade",
-      status: "ativo",
-      visibility: "public",
-      creationDate: new Date(),
-      authorId: "1",
-      generatedContent: "Conteúdo gerado 1",
-      tags: "tag1, tag2",
-      subject: SchoolSubject.Geografia,
-    },
-    {
-      id: "2",
-      title: "Conteúdo Mockado 2",
-      description: "Descrição do conteúdo mockado 2",
-      type: "prova",
-      status: "ativo",
-      visibility: "public",
-      creationDate: new Date(),
-      authorId: "1",
-      generatedContent: "Conteúdo gerado 2",
-      tags: "tag3, tag4",
-      subject: SchoolSubject.Ingles,
-    },
-  ],
-};
+import { getUserWithDetails, UserWithDetails } from "@/services/getUserWithDetails";
+import { AuthContext } from "@/context/AuthContext";
+import UserProfileCard from "@/components/UserProfileCard/UserProfileCard";
 
 const Account = () => {
-  const [user, setUser] = useState<UserWithContents | null>(null);
+  const [user, setUser] = useState<UserWithDetails | null>(null);
   const [loading, setLoading] = useState(true);
+  const { userId } = useContext(AuthContext);
+
+  const refreshUser = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    try {
+      const data = await getUserWithDetails(token);
+      setUser(data);
+    } catch (error) {
+      console.error("Erro ao atualizar usuário:", error);
+    }
+  };
 
   useEffect(() => {
-    // Simula um atraso para exibir o skeleton
-    setTimeout(() => {
-      setUser(mockUser);
-      setLoading(false);
-    }, 2000);
-  }, []);
+    const fetchUser = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setLoading(false);
+        return;
+      }
+      try {
+        const data = await getUserWithDetails(token);
+        setUser(data);
+      } catch (error) {
+        console.error("Erro ao buscar usuário:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchUser();
+  }, [userId]);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", flex: 1 }}>
@@ -75,60 +58,7 @@ const Account = () => {
           alignItems: "center",
           justifyContent: "center",
         }}>
-        <Paper elevation={3} sx={{ p: 4, width: "100%", maxWidth: 600 }}>
-          <Typography variant="h4" component="h1" gutterBottom>
-            Informações da Conta
-          </Typography>
-          {loading ? (
-            <List>
-              <ListItem>
-                <ListItemText primary="Nome" secondary={<Skeleton width="60%" />} />
-              </ListItem>
-              <ListItem>
-                <ListItemText primary="E-mail" secondary={<Skeleton width="80%" />} />
-              </ListItem>
-              <ListItem>
-                <ListItemText primary="Preferências de Conteúdo" secondary={<Skeleton width="50%" />} />
-              </ListItem>
-              <ListItem>
-                <ListItemText primary="Conteúdos Criados" secondary={<Skeleton width="30%" />} />
-              </ListItem>
-            </List>
-          ) : user ? (
-            <List>
-              <ListItem>
-                <ListItemText primary="Nome" secondary={user.name} />
-              </ListItem>
-              <ListItem>
-                <ListItemText primary="E-mail" secondary={user.email} />
-              </ListItem>
-              <ListItem>
-                <ListItemText
-                  primary="Preferências de Conteúdo"
-                  secondary={user.contentPreferences || "Nenhuma preferência definida"}
-                />
-              </ListItem>
-              <ListItem>
-                <ListItemText primary="Conteúdos Criados" secondary={user.createdContents.length} />
-              </ListItem>
-            </List>
-          ) : (
-            <List>
-              <ListItem>
-                <ListItemText primary="Nome" secondary={<Skeleton width="60%" />} />
-              </ListItem>
-              <ListItem>
-                <ListItemText primary="E-mail" secondary={<Skeleton width="80%" />} />
-              </ListItem>
-              <ListItem>
-                <ListItemText primary="Preferências de Conteúdo" secondary={<Skeleton width="50%" />} />
-              </ListItem>
-              <ListItem>
-                <ListItemText primary="Conteúdos Criados" secondary={<Skeleton width="30%" />} />
-              </ListItem>
-            </List>
-          )}
-        </Paper>
+        <UserProfileCard user={user} loading={loading} refreshUser={refreshUser} />
       </Container>
     </Box>
   );

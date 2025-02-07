@@ -34,9 +34,10 @@ interface ContentWithVotes extends Content {
 interface ContentCardProps {
   content: ContentWithVotes;
   isPreview?: boolean;
+  onVoteSuccess?: (updatedContent: ContentWithVotes) => void;
 }
 
-const ContentCard: React.FC<ContentCardProps> = ({ content: initialContent, isPreview = true }) => {
+const ContentCard: React.FC<ContentCardProps> = ({ content: initialContent, isPreview = true, onVoteSuccess }) => {
   const { isLoggedIn, userId } = useContext(AuthContext);
   const [content, setContent] = useState<ContentWithVotes>(initialContent);
 
@@ -47,7 +48,7 @@ const ContentCard: React.FC<ContentCardProps> = ({ content: initialContent, isPr
   const [loadingVote, setLoadingVote] = useState(false);
 
   useEffect(() => {
-    const counts = content.votes.reduce(
+    const counts = content.votes?.reduce(
       (acc, vote) => {
         if (vote.type === "up") acc.upvotes += 1;
         if (vote.type === "down") acc.downvotes += 1;
@@ -57,7 +58,7 @@ const ContentCard: React.FC<ContentCardProps> = ({ content: initialContent, isPr
     );
     setVoteCounts(counts);
 
-    const userVote = content.votes.find((vote) => vote.userId === userId);
+    const userVote = content.votes?.find((vote) => vote.userId === userId);
     setUserVote(userVote ? (userVote.type as "up" | "down") : null);
   }, [content.votes, userId, content]);
 
@@ -71,6 +72,7 @@ const ContentCard: React.FC<ContentCardProps> = ({ content: initialContent, isPr
     }
   };
 
+  // trecho de ContentCard.tsx (dentro da função handleVote)
   const handleVote = async (voteType: "up" | "down") => {
     if (!isLoggedIn) {
       setSnackbarOpen(true);
@@ -83,6 +85,8 @@ const ContentCard: React.FC<ContentCardProps> = ({ content: initialContent, isPr
       await postVote({ contentId: content.id, voteType });
       const updatedContent = await getContentById(content.id);
       setContent(updatedContent);
+      // Chama o callback para atualizar os dados do usuário no componente pai
+      onVoteSuccess && onVoteSuccess(updatedContent);
     } catch (error) {
       console.error(`Error voting ${voteType}`, error);
     } finally {
@@ -154,7 +158,7 @@ const ContentCard: React.FC<ContentCardProps> = ({ content: initialContent, isPr
               onClick={() => handleVote("up")}
             />
           )}{" "}
-          {!loadingVote && voteCounts.upvotes}
+          {!loadingVote && voteCounts?.upvotes ? voteCounts.upvotes : !loadingVote ? 0 : ""}
         </Typography>
         <Typography variant="body2" color="textSecondary">
           {loadingVote ? (
@@ -173,7 +177,7 @@ const ContentCard: React.FC<ContentCardProps> = ({ content: initialContent, isPr
               onClick={() => handleVote("down")}
             />
           )}{" "}
-          {!loadingVote && voteCounts.downvotes}
+          {!loadingVote && voteCounts?.downvotes ? voteCounts.downvotes : !loadingVote ? 0 : ""}
         </Typography>
         <Typography variant="body2" color="textSecondary">
           <strong>Autor:</strong> {content.author?.name || "Desconhecido"}
