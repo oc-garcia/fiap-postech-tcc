@@ -85,8 +85,9 @@ const ContentCard: React.FC<ContentCardProps> = ({ content: initialContent, isPr
       await postVote({ contentId: content.id, voteType });
       const updatedContent = await getContentById(content.id);
       setContent(updatedContent);
-      // Chama o callback para atualizar os dados do usuário no componente pai
-      onVoteSuccess && onVoteSuccess(updatedContent);
+      if (onVoteSuccess) {
+        onVoteSuccess(updatedContent);
+      }
     } catch (error) {
       console.error(`Error voting ${voteType}`, error);
     } finally {
