@@ -22,6 +22,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         createdContents: {
           include: {
             votes: true,
+            author: {
+              select: { name: true },
+            },
           },
         },
         comments: true,

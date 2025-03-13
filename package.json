@@ -1,7 +1,9 @@
 {
   "name": "fiap-postech-tcc",
   "version": "0.1.0",
+  "author": "Octávio Garcia dos Santos",
   "private": true,
+  "license": "UNLICENSED",
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && next build",

@@ -14,6 +14,7 @@ import { SchoolSubject } from "@prisma/client";
 import useGetSubdisciplines from "@/hooks/useGetSubdisciplines";
 import { generateContentFromForm } from "@/services/createContent";
 import { AlertColor, CircularProgress } from "@mui/material";
+import { useRouter } from "next/navigation";
 
 const contentSchema = z.object({
   title: z.string().min(3, "O título deve ter pelo menos 3 caracteres"),
@@ -30,6 +31,7 @@ interface CreateContentFormProps {
 
 const CreateContentForm: React.FC<CreateContentFormProps> = ({ onSuccess, setSnackbar }) => {
   const [selectedSubject, setSelectedSubject] = useState("");
+  const router = useRouter();
 
   const formik = useFormik({
     initialValues: {
@@ -42,9 +44,10 @@ const CreateContentForm: React.FC<CreateContentFormProps> = ({ onSuccess, setSna
     validationSchema: toFormikValidationSchema(contentSchema),
     onSubmit: async (values) => {
       try {
-        await generateContentFromForm(values);
+        const response = await generateContentFromForm(values);
         setSnackbar({ open: true, message: "Conteúdo criado com sucesso!", severity: "success" });
         onSuccess();
+        router.push(`/content/${response.content.id}`);
       } catch (error) {
         console.error(error);
         setSnackbar({ open: true, message: "Erro ao criar conteúdo.", severity: "error" });
@@ -56,7 +59,7 @@ const CreateContentForm: React.FC<CreateContentFormProps> = ({ onSuccess, setSna
     const newSubject = event.target.value as string;
     setSelectedSubject(newSubject);
     formik.setFieldValue("subject", newSubject);
-    formik.setFieldValue("tags", []); // Zera o array de tags
+    formik.setFieldValue("tags", []);
   };
 
   const schoolSubjects = Object.values(SchoolSubject);
